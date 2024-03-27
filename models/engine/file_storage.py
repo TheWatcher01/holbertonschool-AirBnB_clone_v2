@@ -52,9 +52,10 @@ class FileStorage:
         """
         Adds new object to storage dictionary.
         """
-        obj_dict = obj.to_dict()
-        key = '{}.{}'.format(obj_dict['__class__'], obj.id)
-        self.all().update({key: obj})
+        if obj:
+            key = '{}.{}'.format(type(obj).__name__, obj.id)
+            FileStorage.__objects[key] = obj
+
 
     def save(self):
         """
