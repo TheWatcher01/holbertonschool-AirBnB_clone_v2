@@ -86,8 +86,10 @@ class TestDoCreate(unittest.TestCase):
         """Test reaction to invalid attribute format."""
         with self.mock_stdout as mocked_out:
             HBNBCommand().do_create('User email=user@example.com')
-            self.assertIn("** attribute format error **: email=user@example.com (expected key=value)",
-                          mocked_out.getvalue())
+            self.assertIn(
+                "** attribute format error **: email=user@example.com "
+                "(expected key=value)",
+                mocked_out.getvalue())
 
     def test_create_with_special_characters_in_attribute_values(self):
         """Test creation with special characters in attribute values."""
