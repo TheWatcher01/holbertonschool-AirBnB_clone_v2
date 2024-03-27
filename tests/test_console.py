@@ -1,15 +1,17 @@
-#!/usr/bin/python3
-"""
-File: test_console.py
-Author: Teddy Deberdt
-Date: 2024-03-25
-Description: Tests for HBNB console improvements, focusing on the 'create' command.
-"""
 from models.engine.file_storage import FileStorage
 from unittest.mock import patch, create_autospec
 from console import HBNBCommand
 from io import StringIO
 import unittest
+
+#!/usr/bin/python3
+"""
+File: test_console.py
+Author: Teddy Deberdt
+Date: 2024-03-25
+Description: Tests for HBNB console improvements, focusing on the 'create'
+command.
+"""
 
 
 class TestDoCreate(unittest.TestCase):
@@ -43,18 +45,23 @@ class TestDoCreate(unittest.TestCase):
         """Test 'create' command with incorrectly formatted attribute."""
         HBNBCommand().do_create('User email="user@example.com" Password')
         self.assertIn(
-            "** attribute format error **: Password (expected key=value)", self.mock_stdout.getvalue())
+            "** attribute format error **: Password (expected key=value)",
+            self.mock_stdout.getvalue())
 
     def test_create_with_valid_attributes(self):
         """Test 'create' command with valid attributes."""
-        HBNBCommand().do_create('Place city_id="0001" user_id="0001" name="My_little_house" number_rooms=4 number_bathrooms=2 max_guest=10 price_by_night=300 latitude=37.773972 longitude=-122.431297')
+        HBNBCommand().do_create(
+            'Place city_id="0001" user_id="0001" name="My_little_house" '
+            'number_rooms=4 number_bathrooms=2 max_guest=10 '
+            'price_by_night=300 latitude=37.773972 longitude=-122.431297')
         self.assertTrue(self.mock_storage_new.called)
         self.assertTrue(self.mock_storage_save.called)
 
     def test_create_with_mixed_types_attributes(self):
         """Test 'create' command with attributes of mixed types."""
         HBNBCommand().do_create(
-            'Place name="My_little_house" number_rooms=4 latitude=37.773972 longitude=-122.431297')
+            'Place name="My_little_house" number_rooms=4 latitude=37.773972 '
+            'longitude=-122.431297')
         self.assertTrue(self.mock_storage_new.called)
         self.assertTrue(self.mock_storage_save.called)
 
@@ -74,7 +81,8 @@ class TestDoCreate(unittest.TestCase):
         """Test 'create' command reaction to an invalid attribute format."""
         HBNBCommand().do_create('User email=user@example.com')
         self.assertIn(
-            "** attribute format error **: email=user@example.com (expected key=value)", self.mock_stdout.getvalue())
+            "** attribute format error **: email=user@example.com "
+            "(expected key=value)", self.mock_stdout.getvalue())
 
     def test_create_with_special_characters_in_attribute_values(self):
         """Test 'create' command with special characters in attribute values."""
