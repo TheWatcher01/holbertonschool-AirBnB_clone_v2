@@ -6,11 +6,11 @@ Date: 2024-03-25
 Description: Tests for HBNB console command 'create' with improved test
 coverage and practices.
 """
-
-import unittest
 from unittest.mock import patch, MagicMock
 from console import HBNBCommand
 from io import StringIO
+import unittest
+
 
 
 class TestDoCreate(unittest.TestCase):
