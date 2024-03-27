@@ -3,7 +3,7 @@
 File: test_console.py
 Author: Teddy Deberdt
 Date: 2024-03-25
-Description: Tests for HBNB console command 'create' with improved test 
+Description: Tests for HBNB console command 'create' with improved test
 coverage and practices.
 """
 
@@ -66,7 +66,7 @@ class TestDoCreate(unittest.TestCase):
         self.assertTrue(self.mock_storage_save.called)
 
     def test_create_with_complex_string_attributes(self):
-        """Test creation with complex string attributes containing escape sequences."""
+        """Test creation with complex string attr containing escape sequence"""
         HBNBCommand().do_create('Place name="\"My little house\""')
         self.assertTrue(self.mock_storage_new.called)
         self.assertTrue(self.mock_storage_save.called)
