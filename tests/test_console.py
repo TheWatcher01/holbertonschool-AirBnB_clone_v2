@@ -1,10 +1,11 @@
 #!/usr/bin/python3
 """
-File: test_console.py (5 check rouge)
+File: test_console.py
 Author: Teddy Deberdt
 Date: 2024-03-25
 Description: Tests for HBNB console improvements.
 """
+from models.engine.file_storage import FileStorage
 from unittest.mock import patch, MagicMock
 from console import HBNBCommand
 from io import StringIO
