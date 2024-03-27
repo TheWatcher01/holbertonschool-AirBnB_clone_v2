@@ -15,7 +15,7 @@ import uuid
 Base = declarative_base()
 
 
-class BaseModel(Base):
+class BaseModel:
     """
     BaseModel class for other classes to inherit from.
     BaseModel converts Python classes into SQLAlchemy Table objects with
@@ -57,7 +57,7 @@ class BaseModel(Base):
         instance to the storage.
         """
         from models import storage
-        self.updated_at = datetime.now()
+        self.updated_at = datetime.utcnow()
         storage.save()
 
     def delete(self):
