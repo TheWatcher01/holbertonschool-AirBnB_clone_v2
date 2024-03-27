@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-File: test_console.py (5 check rouge, 26/36)
+File: test_console.py (Task 1: 5 check rouge 26/36, score global 62.83%)
 Author: Teddy Deberdt
 Date: 2024-03-25
 Description: Tests for HBNB console improvements.
