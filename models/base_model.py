@@ -23,8 +23,8 @@ class BaseModel(Base):
     """
     __abstract__ = True  # SQLAlchemy class isn't a database table itself
     id = Column(String(60), nullable=False, primary_key=True)
-    created_at = Column(DateTime, default=datetime.utcnow(), nullable=False)
-    updated_at = Column(DateTime, default=datetime.utcnow(), nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
     def __init__(self, *args, **kwargs):
         """
@@ -34,14 +34,14 @@ class BaseModel(Base):
         """
         if not kwargs:
             self.id = str(uuid.uuid4())
-            self.created_at = datetime.now()
-            self.updated_at = datetime.now()
+            self.created_at = datetime.utcnow()
+            self.updated_at = datetime.utcnow()
         else:
             for key, value in kwargs.items():
                 if key == 'created_at' or key == 'updated_at':
                     kwargs[key] = datetime.strptime(
                         value, '%Y-%m-%dT%H:%M:%S.%f')
-                setattr(self, key, kwargs(key))
+                setattr(self, key, kwargs[key])
 
     def __str__(self):
         """
