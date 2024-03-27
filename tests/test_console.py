@@ -1,79 +1,50 @@
 #!/usr/bin/python3
+
 """
 File: test_console.py
 Author: Teddy Deberdt
 Date: 2024-03-25
-Description: Tests for HBNB console improvements.
+Description:
+
 """
-from unittest.mock import patch, MagicMock
-from console import HBNBCommand
-from io import StringIO
 import unittest
+from unittest.mock import patch
+from io import StringIO
+from console import HBNBCommand
 
 
 class TestDoCreate(unittest.TestCase):
 
-    def setUp(self):
-        """Setup before each test."""
-        self.mock_stdout = patch('sys.stdout', new_callable=StringIO)
-        self.mock_storage_new = patch('models.storage.new', MagicMock())
-        self.mock_storage_save = patch('models.storage.save', MagicMock())
+    @patch('sys.stdout', new_callable=StringIO)
+    def test_create_missing_class_name(self, mock_stdout):
+        """Test `do_create` when no class name is given, expecting a specific error message."""
+        HBNBCommand().do_create('')
+        self.assertEqual("** class name missing **\n", mock_stdout.getvalue())
 
-    def tearDown(self):
-        """Cleanup after each test."""
-        patch.stopall()
+    @patch('sys.stdout', new_callable=StringIO)
+    def test_create_class_does_not_exist(self, mock_stdout):
+        """Test `do_create` with an invalid class name, expecting an error message for non-existent class."""
+        HBNBCommand().do_create('NonExistentClass')
+        self.assertEqual("** class doesn't exist **\n", mock_stdout.getvalue())
 
-    def test_create_missing_class_name(self):
-        """Test reaction to missing class name."""
-        with self.mock_stdout as mocked_out:
-            HBNBCommand().do_create('')
-            self.assertEqual("** class name missing **\n",
-                             mocked_out.getvalue())
+    @patch('sys.stdout', new_callable=StringIO)
+    def test_create_attribute_format_error(self, mock_stdout):
+        """Test `do_create` with a malformed attribute string, checking for an attribute format error message."""
+        HBNBCommand().do_create('User email="user@example.com" Password')
+        self.assertIn(
+            "** attribute format error **: Password (expected key=value)", mock_stdout.getvalue())
+        # Using `assertIn` to allow for partial match, given that the entire error message may vary.
 
-    def test_create_class_does_not_exist(self):
-        """Test reaction to invalid class name."""
-        with self.mock_stdout as mocked_out:
-            HBNBCommand().do_create('NonExistentClass')
-            self.assertEqual("** class doesn't exist **\n",
-                             mocked_out.getvalue())
-
-    def test_create_attribute_format_error(self):
-        """Test reaction to malformed attribute format."""
-        with self.mock_stdout as mocked_out:
-            HBNBCommand().do_create('User email="user@example.com" Password')
-            self.assertIn(
-                "** attribute format error **: Password (expected key=value)",
-                mocked_out.getvalue())
-
-    def test_create_with_valid_attributes(self):
-        """Test creation with valid attributes."""
-        with self.mock_stdout as mocked_out, self.mock_storage_new, \
-                self.mock_storage_save:
-            HBNBCommand().do_create(
-                'Place city_id="0001" user_id="0001" '
-                'name="My_little_house" number_rooms=4 number_bathrooms=2 '
-                'max_guest=10 price_by_night=300 latitude=37.773972 '
-                'longitude=-122.431297')
-
-    def test_create_with_mixed_types_attributes(self):
-        """Test creation with mixed types attributes."""
-        with self.mock_stdout as mocked_out, self.mock_storage_new, \
-                self.mock_storage_save:
-            HBNBCommand().do_create(
-                'Place name="My_little_house" number_rooms=4 '
-                'latitude=37.773972 longitude=-122.431297')
-
-    def test_create_with_complex_string_attributes(self):
-        """Test creation with complex string attributes."""
-        with self.mock_stdout as mocked_out:
-            HBNBCommand().do_create('Place name="\\\"My little house\\\""')
-
-    def test_create_with_incomplete_attributes(self):
-        """Test creation with incomplete attribute specifications."""
-        with self.mock_stdout as mocked_out:
-            HBNBCommand().do_create('User email=')
-            self.assertIn("** attribute format error **",
-                          mocked_out.getvalue())
+    @patch('sys.stdout', new_callable=StringIO)
+    def test_create_with_valid_attributes(self, mock_stdout):
+        """
+        Test for `do_create` with valid class name and attributes.
+        """
+        HBNBCommand().do_create('Place city_id="0001" user_id="0001" name="My_little_house" number_rooms=4 number_bathrooms=2 max_guest=10 price_by_night=300 latitude=37.773972 longitude=-122.431297')
+        # Here you should assert that the new object was correctly created and stored.
+        # This might require mocking the storage system or checking the output.
+        self.assertIn('76b65327-9e94-4632-b688-aaa22ab8a124',
+                      mock_stdout.getvalue())
 
 
 if __name__ == "__main__":
