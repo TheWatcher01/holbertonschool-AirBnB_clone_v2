@@ -43,13 +43,13 @@ class TestDoCreate(unittest.TestCase):
         with self.mock_stdout as mocked_out:
             HBNBCommand().do_create('User email="user@example.com" Password')
             self.assertIn(
-                "** attribute format error **: Password "
-                "(expected key=value)", mocked_out.getvalue())
+                "** attribute format error **: Password (expected key=value)",
+                mocked_out.getvalue())
 
     def test_create_with_valid_attributes(self):
         """Test creation with valid attributes."""
-        with self.mock_stdout as mocked_out, \
-                self.mock_storage_new, self.mock_storage_save:
+        with self.mock_stdout as mocked_out, self.mock_storage_new, \
+                self.mock_storage_save:
             HBNBCommand().do_create(
                 'Place city_id="0001" user_id="0001" '
                 'name="My_little_house" number_rooms=4 number_bathrooms=2 '
@@ -58,8 +58,8 @@ class TestDoCreate(unittest.TestCase):
 
     def test_create_with_mixed_types_attributes(self):
         """Test creation with mixed types attributes."""
-        with self.mock_stdout as mocked_out, \
-                self.mock_storage_new, self.mock_storage_save:
+        with self.mock_stdout as mocked_out, self.mock_storage_new, \
+                self.mock_storage_save:
             HBNBCommand().do_create(
                 'Place name="My_little_house" number_rooms=4 '
                 'latitude=37.773972 longitude=-122.431297')
