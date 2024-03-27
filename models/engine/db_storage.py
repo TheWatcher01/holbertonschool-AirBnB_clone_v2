@@ -1,9 +1,10 @@
 #!/usr/bin/python3
 """
-File: db_storage.py
+Module: db_storage.py
 Author: Teddy Deberdt
 Date: 2024-03-25
-Description: Module that defines DBStorage class
+Description: This module defines the DBStorage class, which interacts with the
+MySQL database via SQLAlchemy.
 """
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy import create_engine
@@ -15,12 +16,16 @@ from os import getenv
 
 
 class DBStorage:
-    """Defines DBStorage class"""
+    """
+    DBStorage class for interacting with the MySQL database.
+    """
     __engine = None
     __session = None
 
     def __init__(self):
-        """Initialization of DBStorage instance"""
+        """
+        Initialize DBStorage instance with engine linked to the MySQL database.
+        """
         user = getenv('HBNB_MYSQL_USER')
         pwd = getenv('HBNB_MYSQL_PWD')
         host = getenv('HBNB_MYSQL_HOST')
@@ -34,7 +39,10 @@ class DBStorage:
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
-        """Query all objects depending of class name (cls)"""
+        """
+        Query all objects of a given class. If cls=None, query all types of
+        objects.
+        """
         if cls:
             objects = self.__session.query(cls).all()
         else:
@@ -46,20 +54,28 @@ class DBStorage:
                 for obj in objects}
 
     def new(self, obj):
-        """Add object to current database session"""
+        """
+        Add object to current database session.
+        """
         self.__session.add(obj)
 
     def save(self):
-        """Commit all changes of current database session"""
+        """
+        Commit all changes of current database session.
+        """
         self.__session.commit()
 
     def delete(self, obj=None):
-        """Delete from current database session obj if not None"""
+        """
+        Delete obj from current database session if not None.
+        """
         if obj:
             self.__session.delete(obj)
 
     def reload(self):
-        """Create all tables in database and create current database session"""
+        """
+        Create all tables in the database and create current database session.
+        """
         Base.metadata.create_all(self.__engine)
         session_factory = sessionmaker(
             bind=self.__engine, expire_on_commit=False)
@@ -67,5 +83,7 @@ class DBStorage:
         self.__session = Session()
 
     def close(self):
-        """Dispose current Session"""
+        """
+        Dispose current Session.
+        """
         self.__session.close()
