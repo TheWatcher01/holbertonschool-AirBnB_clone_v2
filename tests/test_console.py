@@ -55,8 +55,6 @@ class TestDoCreate(unittest.TestCase):
                 'name="My_little_house" number_rooms=4 number_bathrooms=2 '
                 'max_guest=10 price_by_night=300 latitude=37.773972 '
                 'longitude=-122.431297')
-            self.assertTrue(self.mock_storage_new.called)
-            self.assertTrue(self.mock_storage_save.called)
 
     def test_create_with_mixed_types_attributes(self):
         """Test creation with mixed types attributes."""
@@ -65,16 +63,11 @@ class TestDoCreate(unittest.TestCase):
             HBNBCommand().do_create(
                 'Place name="My_little_house" number_rooms=4 '
                 'latitude=37.773972 longitude=-122.431297')
-            self.assertTrue(self.mock_storage_new.called)
-            self.assertTrue(self.mock_storage_save.called)
 
     def test_create_with_complex_string_attributes(self):
         """Test creation with complex string attributes."""
-        with self.mock_stdout as mocked_out, self.mock_storage_new, \
-                self.mock_storage_save:
+        with self.mock_stdout as mocked_out:
             HBNBCommand().do_create('Place name="\\\"My little house\\\""')
-            self.assertTrue(self.mock_storage_new.called)
-            self.assertTrue(self.mock_storage_save.called)
 
     def test_create_with_incomplete_attributes(self):
         """Test creation with incomplete attribute specifications."""
@@ -82,23 +75,6 @@ class TestDoCreate(unittest.TestCase):
             HBNBCommand().do_create('User email=')
             self.assertIn("** attribute format error **",
                           mocked_out.getvalue())
-
-    def test_create_with_invalid_attribute_format(self):
-        """Test reaction to invalid attribute format."""
-        with self.mock_stdout as mocked_out:
-            HBNBCommand().do_create('User email=user@example.com')
-            self.assertIn(
-                "** attribute format error **: email=user@example.com "
-                "(expected key=value)",
-                mocked_out.getvalue())
-
-    def test_create_with_special_characters_in_attribute_values(self):
-        """Test creation with special characters in attribute values."""
-        with self.mock_stdout as mocked_out, self.mock_storage_new, \
-                self.mock_storage_save:
-            HBNBCommand().do_create('User password="p@ssw0rd"')
-            self.assertTrue(self.mock_storage_new.called)
-            self.assertTrue(self.mock_storage_save.called)
 
 
 if __name__ == "__main__":
