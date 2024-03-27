@@ -1,8 +1,21 @@
 #!/usr/bin/python3
-""" State Module for HBNB project """
-from models.base_model import BaseModel
+"""
+Module: state.py
+Author: Teddy Deberdt
+Date: 2024-03-27
+Description: This module defines the State class, which inherits from BaseModel
+and represents a state in the HBNB project.
+"""
+from models.base_model import BaseModel, Base
+from sqlalchemy import Column, String
 
 
-class State(BaseModel):
-    """ State class """
-    name = ""
+class State(BaseModel, Base):
+    """
+    The State class represents a state. It inherits from BaseModel and Base
+    (SQLAlchemy declarative base class for Table mapping).
+    Attributes:
+        name (str): The name of the state.
+    """
+    __tablename__ = 'states'
+    name = Column(String(128), nullable=False)
