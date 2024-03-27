@@ -36,7 +36,7 @@ class FileStorage:
             return FileStorage.__objects
         else:
             return {k: v for k, v in FileStorage.__objects.items()
-                    if isinstance(v, cls)}
+                    if type(v) == cls}
 
     def delete(self, obj=None):
         """
