@@ -1,11 +1,20 @@
-#!/usr/bin/python3
-"""This module defines a base class for all models in our hbnb clone"""
-import uuid
+#!/usr/bin/env python3
+"""
+File: base_model.py
+Author: TheWatcher01
+Date: 2024-03-27
+Description: This file contains the BaseModel class
+"""
+from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
+import uuid
+
+Base = declarative_base()
 
 
 class BaseModel:
     """A base class for all hbnb models"""
+
     def __init__(self, *args, **kwargs):
         """Instatntiates a new model"""
         if not kwargs:
