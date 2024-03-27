@@ -12,7 +12,6 @@ from io import StringIO
 import unittest
 
 
-
 class TestDoCreate(unittest.TestCase):
     """Test suite for the 'create' command in the HBNB console."""
 
