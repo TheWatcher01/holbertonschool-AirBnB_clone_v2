@@ -35,8 +35,9 @@ class FileStorage:
         if cls is None:
             return FileStorage.__objects
         if isinstance(cls, str) and cls in FileStorage.classes():
-            cls = FileStorage.classes()[cls]  # Utilisez directement la classe depuis le dictionnaire
-        return {k: v for k, v in FileStorage.__objects.items() if isinstance(v, cls)}
+            cls = FileStorage.classes()[cls]
+        return {k: v for k, v in FileStorage.__objects.items()
+                if isinstance(v, cls)}
 
     def delete(self, obj=None):
         """
