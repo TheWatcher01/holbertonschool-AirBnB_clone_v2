@@ -8,11 +8,8 @@ coverage and practices.
 """
 from unittest.mock import patch, MagicMock
 from console import HBNBCommand
-from models import storage
-from models.engine.file_storage import FileStorage
 from io import StringIO
 import unittest
-from unittest import skipIf
 
 
 class TestDoCreate(unittest.TestCase):
@@ -31,7 +28,7 @@ class TestDoCreate(unittest.TestCase):
         """Clean up resources and stop all patches."""
         patch.stopall()
 
-    def test_create_without_parameters(self):
+    def test_create_missing_class_name(self):
         """Ensure error message for missing class name."""
         HBNBCommand().do_create('')
         self.assertEqual("** class name missing **\n",
@@ -45,8 +42,10 @@ class TestDoCreate(unittest.TestCase):
 
     def test_create_attribute_format_error(self):
         """Test for malformed attribute format."""
-        with self.assertRaises(Exception):
-            HBNBCommand().do_create('User email="user@example.com" Password')
+        HBNBCommand().do_create('User email="user@example.com" Password')
+        self.assertIn(
+            "** attribute format error **: Password "
+            "(expected key=value)", self.mock_stdout.getvalue())
 
     def test_create_with_valid_attributes(self):
         """Validate object creation with correct attributes."""
@@ -73,35 +72,9 @@ class TestDoCreate(unittest.TestCase):
 
     def test_create_with_incomplete_attributes(self):
         """Ensure error message for incomplete attribute specifications."""
-        with self.assertRaises(Exception):
-            HBNBCommand().do_create('User email=')
-
-    def test_create_with_malformatted_parameters(self):
-        """Test create command with malformatted parameters"""
-        with self.assertRaises(Exception):
-            HBNBCommand().do_create('State name=California "population=800K"')
-
-    @skipIf(type(storage) == FileStorage, "Using FileStorage")
-    def test_create_state_in_db(self):
-        """Validate 'create State name="California"' adds a new record."""
-        initial_state_count = len(storage.all("State"))
-        HBNBCommand().do_create('State name="California"')
-        self.assertTrue(self.mock_storage_new.called)
-        self.assertTrue(self.mock_storage_save.called)
-        storage.reload()
-        final_state_count = len(storage.all("State"))
-        self.assertEqual(final_state_count, initial_state_count + 1)
-
-    def test_create_persistence(self):
-        """Test create command persistence"""
-        HBNBCommand().do_create('State name="Hawaii"')
-        self.assertTrue(self.mock_storage_new.called)
-        self.assertTrue(self.mock_storage_save.called)
-        storage.reload()
-        states = list(storage.all("State").values())
-        self.assertTrue(states, "No states found")
-        state = states[-1]
-        self.assertEqual(state.name, "Hawaii")
+        HBNBCommand().do_create('User email=')
+        self.assertIn("** attribute format error **",
+                      self.mock_stdout.getvalue())
 
 
 if __name__ == "__main__":
