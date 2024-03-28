@@ -9,8 +9,7 @@ and represents a state in the HBNB project.
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
-from models import storage_t
-import models
+from os import getenv
 
 
 class State(BaseModel, Base):
@@ -21,17 +20,16 @@ class State(BaseModel, Base):
         name (str): The name of the state.
     """
     __tablename__ = 'states'
-    if storage_t == 'db':
-        name = Column(String(128), nullable=False)
+    name = Column(String(128), nullable=False)
+
+    if getenv("HBNB_TYPE_STORAGE") == "db":
         cities = relationship("City", back_populates="state",
                               cascade="all, delete-orphan")
     else:
-        name = ""
-
         @property
         def cities(self):
-            """Returns the list of City instances with state_id equal to
-            the current State.id for FileStorage"""
+            """Get a list of all related City objects."""
+            from models import storage
             from models.city import City
-            city_list = models.storage.all(City).values()
-            return [city for city in city_list if city.state_id == self.id]
+            return [city for city in storage.all(City).values()
+                    if city.state_id == self.id]
