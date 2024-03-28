@@ -19,16 +19,16 @@ class HBNBCommand(cmd.Cmd):
     prompt = '(hbnb) ' if sys.__stdin__.isatty() else ''
 
     classes = {
-               'BaseModel': BaseModel, 'User': User, 'Place': Place,
-               'State': State, 'City': City, 'Amenity': Amenity,
-               'Review': Review
-              }
+        'BaseModel': BaseModel, 'User': User, 'Place': Place,
+        'State': State, 'City': City, 'Amenity': Amenity,
+        'Review': Review
+    }
     dot_cmds = ['all', 'count', 'show', 'destroy', 'update']
     types = {
-             'number_rooms': int, 'number_bathrooms': int,
-             'max_guest': int, 'price_by_night': int,
-             'latitude': float, 'longitude': float
-            }
+        'number_rooms': int, 'number_bathrooms': int,
+        'max_guest': int, 'price_by_night': int,
+        'latitude': float, 'longitude': float
+    }
 
     def preloop(self):
         """Prints if isatty is false"""
@@ -165,18 +165,20 @@ class HBNBCommand(cmd.Cmd):
 
     def help_create(self):
         """Displays the help for the create command."""
-        print("Creates a new instance of a given class with specified attributes.")
+        print("Creates new instance of given class with specified attres.")
         print("\nUsage: create <Class name> <param 1> <param 2> ...")
         print("\nParameters:")
         print("  - Class name: Name of the class to create an instance of.")
-        print("  - param: Attribute name and value pair in the format <attribute name>=<value>.")
+        print("  - param: Attribute name & value pair in format "
+              "<attribute name>=<value>.")
         print("           Strings must be enclosed in double quotes.")
-        print("           Use underscores to represent spaces in string values.")
-        print("           For float and integer values, use standard numerical formats.")
+        print("           Use underscore to represent space in string value.")
+        print("           For float and integer values, use standard "
+              "numerical formats.")
         print("\nExamples:")
         print("  create State name=\"California\"")
-        print("  create Place city_id=\"0001\" user_id=\"0001\" name=\"My_little_house\" number_rooms=4")
-
+        print("  create Place city_id=\"0001\" user_id=\"0001\" "
+              "name=\"My_little_house\" number_rooms=4")
 
     def do_show(self, args):
         """ Method to show an individual object """
@@ -234,7 +236,7 @@ class HBNBCommand(cmd.Cmd):
         key = c_name + "." + c_id
 
         try:
-            del(storage.all()[key])
+            del (storage.all()[key])
             storage.save()
         except KeyError:
             print("** no instance found **")
