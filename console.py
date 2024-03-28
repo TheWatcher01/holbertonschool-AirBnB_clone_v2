@@ -164,9 +164,19 @@ class HBNBCommand(cmd.Cmd):
         return value  # Return the original value if it can't be converted
 
     def help_create(self):
-        """ Help information for the create method """
-        print("Creates a class of any type")
-        print("[Usage]: create <className>\n")
+        """Displays the help for the create command."""
+        print("Creates a new instance of a given class with specified attributes.")
+        print("\nUsage: create <Class name> <param 1> <param 2> ...")
+        print("\nParameters:")
+        print("  - Class name: Name of the class to create an instance of.")
+        print("  - param: Attribute name and value pair in the format <attribute name>=<value>.")
+        print("           Strings must be enclosed in double quotes.")
+        print("           Use underscores to represent spaces in string values.")
+        print("           For float and integer values, use standard numerical formats.")
+        print("\nExamples:")
+        print("  create State name=\"California\"")
+        print("  create Place city_id=\"0001\" user_id=\"0001\" name=\"My_little_house\" number_rooms=4")
+
 
     def do_show(self, args):
         """ Method to show an individual object """
