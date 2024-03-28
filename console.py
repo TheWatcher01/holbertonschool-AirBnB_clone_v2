@@ -114,6 +114,7 @@ class HBNBCommand(cmd.Cmd):
         pass
 
     # Task 2. Console improvements
+
     def do_create(self, args):
         """Create an object of any class with given parameters."""
         arguments = args.split(' ')
@@ -130,14 +131,12 @@ class HBNBCommand(cmd.Cmd):
         # Process each attribute=value pair
         for arg in arguments[1:]:
             if '=' not in arg:
-                print("** attribute format error **: {} (expected key=value)"
-                      .format(arg))
-                continue
+                raise Exception("** attribute format error **: {} "
+                      "(expected key=value)".format(arg))
             key, value = arg.split('=', 1)
             if not key or not value:
-                print("** attribute format error **: {} (expected key=value)"
-                      .format(arg))
-                continue
+                raise Exception("** attribute format error **: {} "
+                      "(expected key=value)".format(arg))
             # Assign the parsed value to the new instance
             setattr(new_instance, key, self.parse_value(value))
 
