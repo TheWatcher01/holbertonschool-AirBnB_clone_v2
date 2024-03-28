@@ -3,13 +3,14 @@
 Module: state.py
 Author: Teddy Deberdt
 Date: 2024-03-27
-Description: This module defines the State class, which inherits from BaseModel
+Description: This module defines the State class. It inherits from BaseModel
 and represents a state in the HBNB project.
 """
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 from os import getenv
+
 
 class State(BaseModel, Base):
     """
@@ -26,7 +27,10 @@ class State(BaseModel, Base):
     else:
         @property
         def cities(self):
-            """Retourne la liste des City instances liées au State pour FileStorage."""
+            """
+            Returns the list of City instances linked to the State for
+            FileStorage.
+            """
             from models import storage
             all_cities = storage.all(City)
             state_cities = [city for city in all_cities.values()
