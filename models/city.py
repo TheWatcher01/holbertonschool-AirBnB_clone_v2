@@ -3,20 +3,22 @@
 Module: city.py
 Author: Teddy Deberdt
 Date: 2024-03-27
-Description: This module defines the City class, which inherits from BaseModel
-and represents a city in the HBNB project.
+Description: Defines the City class in the HBNB project. Represents cities
+with name and state_id attributes, extending functionality from BaseModel.
 """
-from sqlalchemy import Column, String, ForeignKey
+
 from models.base_model import BaseModel, Base
+from sqlalchemy import Column, String, ForeignKey
 
 
 class City(BaseModel, Base):
     """
-    The City class represents a city. It inherits from BaseModel and Base
-    (SQLAlchemy declarative base class for Table mapping).
+    Represents a city with related state information in the database.
+
     Attributes:
-        state_id (str): The state id to which the city belongs.
-        name (str): The name of the city.
+        __tablename__: Explicit table name definition for SQLAlchemy.
+        state_id (Column): State id, indicating which state city belongs to.
+        name (Column): The city's name.
     """
     __tablename__ = 'cities'
     state_id = Column(String(60), ForeignKey('states.id'), nullable=False)

@@ -3,8 +3,8 @@
 Module: review.py
 Author: Teddy Deberdt
 Date: 2024-03-27
-Description: This module defines Review class, which inherits from BaseModel
-and represents a review in HBNB project.
+Description: Module defines Review class, which inherits from BaseModel
+and represents a review in the HBNB project.
 """
 from sqlalchemy import Column, String, ForeignKey
 from models.base_model import BaseModel, Base
@@ -12,12 +12,12 @@ from models.base_model import BaseModel, Base
 
 class Review(BaseModel, Base):
     """
-    Review class represents a review. It inherits from BaseModel and Base
+    The Review class represents a review. It inherits from BaseModel and Base
     (SQLAlchemy declarative base class for Table mapping).
     Attributes:
-        place_id (str): id of place review is for.
-        user_id (str): id of user who wrote review.
-        text (str): text of review.
+        place_id (str): The id of the place the review is for.
+        user_id (str): The id of the user who wrote the review.
+        text (str): The text of the review.
     """
     __tablename__ = 'reviews'
     place_id = Column(String(60), ForeignKey('places.id'), nullable=False)
