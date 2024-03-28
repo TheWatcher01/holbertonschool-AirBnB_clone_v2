@@ -27,8 +27,8 @@ class BaseModel:
     """
     __abstract__ = True  # SQLAlchemy class isn't a database table itself
     id = Column(String(60), nullable=False, primary_key=True, unique=True)
-    created_at = Column(DATETIME, default=datetime.utcnow(), nullable=False)
-    updated_at = Column(DATETIME, default=datetime.utcnow(), nullable=False)
+    created_at = Column(DATETIME, default=datetime.utcnow())
+    updated_at = Column(DATETIME, default=datetime.utcnow())
 
     def __init__(self, *args, **kwargs):
         """
