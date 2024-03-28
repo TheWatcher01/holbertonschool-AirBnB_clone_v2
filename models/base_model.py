@@ -9,10 +9,14 @@ class for all other model classes in the hbnb project.
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import DATETIME, Column, String, DateTime
 from datetime import datetime
+from models import models
 import uuid
 
 # SQLAlchemy declarative base instance to construct models
-Base = declarative_base()
+if models.is_type == "db":
+    Base = declarative_base()
+else:
+    Base = object
 
 
 class BaseModel:
