@@ -9,7 +9,8 @@ and represents a state in the HBNB project.
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
-from models import storage_t  # Import storage_t from models
+from models import storage_t
+import models
 
 
 class State(BaseModel, Base):
@@ -20,7 +21,7 @@ class State(BaseModel, Base):
         name (str): The name of the state.
     """
     __tablename__ = 'states'
-    if storage_t == 'db':  # Use storage_t in condition
+    if storage_t == 'db':
         name = Column(String(128), nullable=False)
         cities = relationship("City", back_populates="state",
                               cascade="all, delete-orphan")
