@@ -7,7 +7,7 @@ Description: This module defines the BaseModel class, which serves as the base
 class for all other model classes in the hbnb project.
 """
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import DATETIME, Column, String, DateTime
+from sqlalchemy import DATETIME, Column, String
 from datetime import datetime
 import uuid
 
@@ -38,10 +38,18 @@ class BaseModel:
             self.updated_at = datetime.now()
         else:
             for key, value in kwargs.items():
-                if key == 'created_at' or key == 'updated_at':
-                    kwargs[key] = datetime.strptime(
-                        value, '%Y-%m-%dT%H:%M:%S.%f')
-                setattr(self, key, kwargs[key])
+                if key != '__class__':
+                    if key in ('created_at', 'updated_at'):
+                        setattr(self, key, datetime.fromisoformat(value))
+                    else:
+                        setattr(self, key, value)
+            # if os.getenv('HBNB_TYPE_STORAGE') in ('db'):
+            if not hasattr(kwargs, 'id'):
+                setattr(self, 'id', str(uuid.uuid4()))
+            if not hasattr(kwargs, 'created_at'):
+                setattr(self, 'created_at', datetime.now())
+            if not hasattr(kwargs, 'updated_at'):
+                setattr(self, 'updated_at', datetime.now())
 
     def __str__(self):
         """
