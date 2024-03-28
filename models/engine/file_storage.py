@@ -44,10 +44,10 @@ class FileStorage:
         """
         Deletes obj from __objects if it’s inside.
         """
-        if obj:
+        if obj is not None:
             obj_key = "{}.{}".format(type(obj).__name__, obj.id)
-            FileStorage.__objects.pop(obj_key, None)
-            self.save()
+            if obj_key in FileStorage.__objects:
+                del FileStorage.__objects[obj_key]
 
     def new(self, obj):
         """
