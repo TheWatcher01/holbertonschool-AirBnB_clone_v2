@@ -3,7 +3,7 @@
 Module: city.py
 Author: Teddy Deberdt
 Date: 2024-03-27
-Description: This module defines the City class, which inherits from BaseModel
+Description: Mdule defines the City class, which inherits from BaseModel
 and represents a city in the HBNB project.
 """
 from sqlalchemy import Column, String, ForeignKey
