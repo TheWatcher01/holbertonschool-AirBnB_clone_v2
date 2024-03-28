@@ -7,7 +7,6 @@ Description: This module defines the User class, which inherits from BaseModel
 and represents a user in the HBNB project.
 """
 from sqlalchemy import Column, String
-from sqlalchemy.orm import relationship
 from models.base_model import BaseModel, Base
 
 
