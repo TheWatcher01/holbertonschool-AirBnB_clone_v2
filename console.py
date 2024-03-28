@@ -134,7 +134,7 @@ class HBNBCommand(cmd.Cmd):
                       .format(arg))
                 continue
             key, value = arg.split('=', 1)
-            if not key or not value:
+            if not key:
                 print("** attribute format error **: {} (expected key=value)"
                       .format(arg))
                 continue
@@ -148,9 +148,10 @@ class HBNBCommand(cmd.Cmd):
     # Task 2. Console improvements
     def parse_value(self, value):
         """Parse a string value to the correct type."""
-        if value[0] == '"' and value[-1] == '"':
-            value = value.strip('"').replace('_', ' ').replace('\\"', '"')
-            return value  # Return string value without converting to int/float
+        if value:
+            if value[0] == '"' and value[-1] == '"':
+                value = value.strip('"').replace('_', ' ').replace('\\"', '"')
+                return value  # Return string value without converting to int/float
         elif '.' in value:
             try:
                 return float(value)
