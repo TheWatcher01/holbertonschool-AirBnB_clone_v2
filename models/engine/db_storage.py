@@ -27,8 +27,9 @@ class DBStorage:
         pwd = getenv('HBNB_MYSQL_PWD')
         host = getenv('HBNB_MYSQL_HOST')
         db = getenv('HBNB_MYSQL_DB')
-        self.__engine = create_engine(f'mysql+mysqldb://{user}:{pwd}@{host}/{db}',
-                                      pool_pre_ping=True)
+        self.__engine = create_engine(
+            f'mysql+mysqldb://{user}:{pwd}@{host}/{db}',
+            pool_pre_ping=True)
 
         if getenv('HBNB_ENV') == 'test':
             Base.metadata.drop_all(self.__engine)
@@ -43,7 +44,8 @@ class DBStorage:
                 if hasattr(cls, '__tablename__')
                 for obj in self.__session.query(cls).all()
             ]
-            return {f"{type(obj).__name__}.{obj.id}": obj for obj in objects}
+            return {f"{type(obj).__name__}.{obj.id}": obj
+                    for obj in objects}
         except SQLAlchemyError as e:
             print(f"SQLAlchemy Exception: {e}")
             return {}
