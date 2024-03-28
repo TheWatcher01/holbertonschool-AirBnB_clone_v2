@@ -56,7 +56,6 @@ class FileStorage:
             key = '{}.{}'.format(type(obj).__name__, obj.id)
             FileStorage.__objects[key] = obj
 
-
     def save(self):
         """
         Saves storage dictionary to file in JSON format.

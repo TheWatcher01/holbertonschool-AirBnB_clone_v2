@@ -3,8 +3,7 @@
 Module: db_storage.py
 Author: Teddy Deberdt
 Date: 2024-03-25
-Description: This module defines the DBStorage class, which interacts with the
-MySQL database via SQLAlchemy.
+Description: Defines the DBStorage class interacting with MySQL via SQLAlchemy.
 """
 from sqlalchemy import create_engine
 from sqlalchemy.exc import SQLAlchemyError
@@ -15,14 +14,14 @@ from os import getenv
 
 class DBStorage:
     """
-    DBStorage class for interacting with the MySQL database.
+    Handles interactions with the MySQL database through SQLAlchemy.
     """
     __engine = None
     __session = None
 
     def __init__(self):
         """
-        Initialize DBStorage instance with engine linked to the MySQL database.
+        Initializes DBStorage instance, linking it to the MySQL database.
         """
         user = getenv('HBNB_MYSQL_USER')
         pwd = getenv('HBNB_MYSQL_PWD')
@@ -32,36 +31,32 @@ class DBStorage:
                                       pool_pre_ping=True)
 
         if getenv('HBNB_ENV') == 'test':
-            # Drop all tables if in test environment
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
         """
-        Query all objects of a given class. If cls=None, query all types of
-        objects.
+        Queries all objects of a class, or all types if none specified.
         """
         try:
-            objects = []
-            if cls:
-                objects = self.__session.query(cls).all()
-            else:
-                for cls in Base._decl_class_registry.values():
-                    if hasattr(cls, '__tablename__'):
-                        objects.extend(self.__session.query(cls).all())
-            return {f"{obj.__class__.__name__}.{obj.id}": obj for obj in objects}
+            objects = self.__session.query(cls).all() if cls else [
+                obj for cls in Base._decl_class_registry.values()
+                if hasattr(cls, '__tablename__')
+                for obj in self.__session.query(cls).all()
+            ]
+            return {f"{type(obj).__name__}.{obj.id}": obj for obj in objects}
         except SQLAlchemyError as e:
             print(f"SQLAlchemy Exception: {e}")
             return {}
 
     def new(self, obj):
         """
-        Add object to current database session.
+        Adds an object to the current database session.
         """
         self.__session.add(obj)
 
     def save(self):
         """
-        Commit all changes of current database session.
+        Commits all changes of the current database session.
         """
         try:
             self.__session.commit()
@@ -71,14 +66,14 @@ class DBStorage:
 
     def delete(self, obj=None):
         """
-        Delete obj from current database session if not None.
+        Deletes an object from the current database session, if not None.
         """
         if obj:
             self.__session.delete(obj)
 
     def reload(self):
         """
-        Create all tables in the database and create current database session.
+        Recreates all tables in the database and initializes the session.
         """
         try:
             Base.metadata.create_all(self.__engine)
@@ -91,7 +86,6 @@ class DBStorage:
 
     def close(self):
         """
-        Dispose current Session.
+        Closes the current session.
         """
-        if self.__session:
-            self.__session.close()
+        self.__session.close()
