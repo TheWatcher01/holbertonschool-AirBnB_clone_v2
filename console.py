@@ -114,7 +114,6 @@ class HBNBCommand(cmd.Cmd):
         pass
 
     # Task 2. Console improvements
-
     def do_create(self, args):
         """Create an object of any class with given parameters."""
         arguments = args.split(' ')
@@ -131,12 +130,14 @@ class HBNBCommand(cmd.Cmd):
         # Process each attribute=value pair
         for arg in arguments[1:]:
             if '=' not in arg:
-                raise Exception("** attribute format error **: {} "
-                      "(expected key=value)".format(arg))
+                print("** attribute format error **: {} (expected key=value)"
+                      .format(arg))
+                continue
             key, value = arg.split('=', 1)
             if not key or not value:
-                raise Exception("** attribute format error **: {} "
-                      "(expected key=value)".format(arg))
+                print("** attribute format error **: {} (expected key=value)"
+                      .format(arg))
+                continue
             # Assign the parsed value to the new instance
             setattr(new_instance, key, self.parse_value(value))
 
@@ -163,21 +164,9 @@ class HBNBCommand(cmd.Cmd):
         return value  # Return the original value if it can't be converted
 
     def help_create(self):
-        """Displays the help for the create command."""
-        print("Creates new instance of given class with specified attres.")
-        print("\nUsage: create <Class name> <param 1> <param 2> ...")
-        print("\nParameters:")
-        print("  - Class name: Name of the class to create an instance of.")
-        print("  - param: Attribute name & value pair in format "
-              "<attribute name>=<value>.")
-        print("           Strings must be enclosed in double quotes.")
-        print("           Use underscore to represent space in string value.")
-        print("           For float and integer values, use standard "
-              "numerical formats.")
-        print("\nExamples:")
-        print("  create State name=\"California\"")
-        print("  create Place city_id=\"0001\" user_id=\"0001\" "
-              "name=\"My_little_house\" number_rooms=4")
+        """ Help information for the create method """
+        print("Creates a class of any type")
+        print("[Usage]: create <className>\n")
 
     def do_show(self, args):
         """ Method to show an individual object """
