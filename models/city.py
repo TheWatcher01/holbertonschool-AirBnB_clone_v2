@@ -1,3 +1,4 @@
+
 #!/usr/bin/python3
 """
 Module: city.py
@@ -8,7 +9,6 @@ and represents a city in the HBNB project.
 """
 from sqlalchemy import Column, String, ForeignKey
 from models.base_model import BaseModel, Base
-from sqlalchemy.orm import relationship
 
 
 class City(BaseModel, Base):
@@ -20,6 +20,5 @@ class City(BaseModel, Base):
         name (str): The name of the city.
     """
     __tablename__ = 'cities'
-    name = Column(String(128), nullable=False)
     state_id = Column(String(60), ForeignKey('states.id'), nullable=False)
-    state = relationship("State", back_populates="cities")
+    name = Column(String(128), nullable=False)
