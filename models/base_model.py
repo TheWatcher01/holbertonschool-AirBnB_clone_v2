@@ -18,38 +18,37 @@ Base = declarative_base()
 class BaseModel:
     """
     BaseModel class for other classes to inherit from.
-    BaseModel converts Python classes into SQLAlchemy Table objects with
+    Converts Python classes into SQLAlchemy Table objects with
     appropriate fields and relationships for database storage.
     """
     __abstract__ = True  # SQLAlchemy class isn't a database table itself
     id = Column(String(60), nullable=False, primary_key=True)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = Column(DateTime, default=datetime.utcnow,
+                        onupdate=datetime.utcnow, nullable=False)
 
     def __init__(self, *args, **kwargs):
         """
-        Instantiate a new model.
-        If no kwargs are provided, id, created_at and updated_at are set.
-        If kwargs are provided, they are used to set instance attributes.
+        Instantiate a new model. If kwargs are provided, they are used to set
+        instance attributes. Otherwise, id, created_at, and updated_at are set.
         """
-        if not kwargs:
-            self.id = str(uuid.uuid4())
-            self.created_at = datetime.utcnow()
-            self.updated_at = datetime.utcnow()
-        else:
-            for key, value in kwargs.items():
-                if key == 'created_at' or key == 'updated_at':
-                    kwargs[key] = datetime.strptime(
-                        value, '%Y-%m-%dT%H:%M:%S.%f')
-                setattr(self, key, kwargs[key])
+        self.id = kwargs.get('id', str(uuid.uuid4()))
+        self.created_at = kwargs.get('created_at', datetime.utcnow())
+        self.updated_at = kwargs.get('updated_at', datetime.utcnow())
+        for key, value in kwargs.items():
+            if key not in ('id', 'created_at', 'updated_at'):
+                setattr(self, key, value)
 
     def __str__(self):
         """
         Returns a string representation of the instance.
         Format: [<class name>] (<id>) <dictionary of instance attributes>
         """
-        cls = (str(type(self)).split('.')[-1]).split('\'')[0]
-        return '[{}] ({}) {}'.format(cls, self.id, self.__dict__)
+        cls_name = self.__class__.__name__
+        return '[{}] ({}) {}'.format(
+            cls_name, self.id,
+            {k: v for k, v in self.__dict__.items() if k !=
+             '_sa_instance_state'})
 
     def save(self):
         """
@@ -58,6 +57,7 @@ class BaseModel:
         """
         from models import storage
         self.updated_at = datetime.utcnow()
+        storage.new(self)
         storage.save()
 
     def delete(self):
@@ -71,10 +71,8 @@ class BaseModel:
         """
         Converts the instance into a dictionary format for JSON serialization.
         """
-        dictionary = self.__dict__.copy()
-        dictionary['__class__'] = self.__class__.__name__
-        if '_sa_instance_state' in dictionary:
-            del dictionary['_sa_instance_state']
-        dictionary['created_at'] = dictionary['created_at'].isoformat()
-        dictionary['updated_at'] = dictionary['updated_at'].isoformat()
+        dictionary = {**self.__dict__, '__class__': self.__class__.__name__}
+        dictionary['created_at'] = self.created_at.isoformat()
+        dictionary['updated_at'] = self.updated_at.isoformat()
+        dictionary.pop('_sa_instance_state', None)
         return dictionary
