@@ -8,6 +8,7 @@ coverage and practices.
 """
 from unittest.mock import patch, MagicMock
 from console import HBNBCommand
+from models import storage
 from io import StringIO
 import unittest
 
@@ -28,7 +29,7 @@ class TestDoCreate(unittest.TestCase):
         """Clean up resources and stop all patches."""
         patch.stopall()
 
-    def test_create_missing_class_name(self):
+    def test_create_without_parameters(self):
         """Ensure error message for missing class name."""
         HBNBCommand().do_create('')
         self.assertEqual("** class name missing **\n",
@@ -75,6 +76,21 @@ class TestDoCreate(unittest.TestCase):
         HBNBCommand().do_create('User email=')
         self.assertIn("** attribute format error **",
                       self.mock_stdout.getvalue())
+
+    def test_create_with_malformatted_parameters(self):
+        """Test create command with malformatted parameters"""
+        HBNBCommand().do_create('State name=California "population=800K"')
+        self.assertIn("** attribute format error **",
+                      self.mock_stdout.getvalue())
+
+    def test_create_persistence(self):
+        """Test create command persistence"""
+        HBNBCommand().do_create('State name="Hawaii"')
+        self.assertTrue(self.mock_storage_new.called)
+        self.assertTrue(self.mock_storage_save.called)
+        storage.reload()
+        state = list(storage.all("State").values())[-1]
+        self.assertEqual(state.name, "Hawaii")
 
 
 if __name__ == "__main__":
