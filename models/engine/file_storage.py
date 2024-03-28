@@ -34,25 +34,27 @@ class FileStorage:
         """
         if cls is None:
             return FileStorage.__objects
-        else:
-            return {k: v for k, v in FileStorage.__objects.items()
-                    if isinstance(v, cls)}
+        elif isinstance(cls, str):
+            cls = eval(cls) if cls in FileStorage.classes() else None
+        return {
+            k: v for k, v in FileStorage.__objects.items() if
+            isinstance(v, cls)}
 
     def delete(self, obj=None):
         """
         Deletes obj from __objects if it’s inside.
         """
-        if obj is not None:
+        if obj:
             obj_key = "{}.{}".format(type(obj).__name__, obj.id)
-            if obj_key in FileStorage.__objects:
-                del FileStorage.__objects[obj_key]
+            FileStorage.__objects.pop(obj_key, None)
+            self.save()
 
     def new(self, obj):
         """
         Adds new object to storage dictionary.
         """
         if obj:
-            key = '{}.{}'.format(type(obj).__name__, obj.id)
+            key = '{}.{}'.format(obj.__class__.__name__, obj.id)
             FileStorage.__objects[key] = obj
 
     def save(self):
@@ -67,15 +69,26 @@ class FileStorage:
         """
         Loads storage dictionary from file.
         """
-        classes = {
-            'BaseModel': BaseModel, 'User': User, 'Place': Place,
-            'State': State, 'City': City, 'Amenity': Amenity,
-            'Review': Review
-        }
         try:
             with open(FileStorage.__file_path, 'r') as f:
                 temp = json.load(f)
                 for key, val in temp.items():
-                    self.all()[key] = classes[val['__class__']](**val)
+                    cls_name = val['__class__']
+                    if cls_name in FileStorage.classes():
+                        cls = eval(cls_name)
+                        self.new(cls(**val))
         except FileNotFoundError:
             pass
+        except json.JSONDecodeError:
+            print("Error: Unable to decode the JSON file.")
+
+    @staticmethod
+    def classes():
+        """
+        Returns a dictionary of valid classes and their references.
+        """
+        return {
+            'BaseModel': BaseModel, 'User': User, 'Place': Place,
+            'State': State, 'City': City, 'Amenity': Amenity,
+            'Review': Review
+        }
