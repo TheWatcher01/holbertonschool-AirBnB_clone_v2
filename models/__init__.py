@@ -9,7 +9,6 @@ Description: Initializes the storage engine based on the environment variable
 """
 
 from os import getenv
-import sys
 
 # Determine the storage type from the 'HBNB_TYPE_STORAGE' environment variable
 storage_type = getenv('HBNB_TYPE_STORAGE')
@@ -22,11 +21,11 @@ if storage_type == 'db':
     # Check if all required configurations for DBStorage are present
     missing_vars = [var for var in required_vars if not getenv(var)]
     if missing_vars:
-        error_message = f"Missing env. variables for DBStorage:
-            {', '.join(missing_vars)}"
-        print(error_message)
-        # Exits the script if any variables are missing
-        sys.exit(error_message)
+        print(
+            f"Missing env. variables for DBStorage: {', '.join(missing_vars)}")
+        print("Falling back to FileStorage.")
+        from models.engine.file_storage import FileStorage
+        storage = FileStorage()
     else:
         from models.engine.db_storage import DBStorage
         storage = DBStorage()
@@ -43,4 +42,3 @@ except Exception as e:
         print("Make sure database is accessible & credentials are correct.")
     else:
         print("Check the integrity of your JSON file.")
-    sys.exit(f"Error loading storage: {e}")  # Exit if storage cannot be loaded
