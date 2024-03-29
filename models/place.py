@@ -7,4 +7,3 @@ Description: Defines the Place class, inheriting from BaseModel and Base,
 representing a place in the HBNB project with attributes for location,
 accommodation details, and associated amenities.
 """
-

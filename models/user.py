@@ -7,4 +7,3 @@ Description: Defines the User class, inheriting from BaseModel and Base,
 representing a user in the HBNB project with email, password, first_name,
 and last_name attributes.
 """
-
