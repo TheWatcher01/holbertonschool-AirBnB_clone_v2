@@ -55,6 +55,10 @@ class TestDoCreate(unittest.TestCase):
             'price_by_night=300 latitude=37.773972 longitude=-122.431297')
         self.assertTrue(self.mock_storage_new.called)
         self.assertTrue(self.mock_storage_save.called)
+        output = self.mock_stdout.getvalue()
+        uuid_pattern = re.compile(
+            r'[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\n')
+        self.assertRegex(output, uuid_pattern)
 
     def test_create_with_mixed_types_attributes(self):
         """Test creation with attributes of mixed types."""
