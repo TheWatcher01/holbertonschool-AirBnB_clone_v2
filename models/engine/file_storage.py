@@ -8,7 +8,9 @@ file and deserializing JSON file to instances, managing a simple file-based
 storage system.
 """
 
+import logging
 import json
+import os
 
 
 class FileStorage:
@@ -27,11 +29,7 @@ class FileStorage:
     def delete(self, obj=None):
         """Deletes obj from __objects if it’s inside"""
         if obj is not None:
-            # Build the key from the given object
             obj_key = "{}.{}".format(type(obj).__name__, obj.id)
-            # Use `pop` to remove the object if it exists,
-            # without needing to explicitly check its presence
-            FileStorage.__objects.pop(obj_key, None)
             FileStorage.__objects.pop(obj_key, None)
 
     def new(self, obj):
@@ -48,6 +46,13 @@ class FileStorage:
 
     def reload(self):
         """Loads storage dictionary from file"""
+        if not os.path.exists(FileStorage.__file_path):
+            logging.warning(
+            f"File {FileStorage.__file_path} does not exist."
+            " No data loaded.")
+            # Early exit if the file does not exist
+            return
+
         from models.base_model import BaseModel
         from models.user import User
         from models.place import Place
@@ -61,10 +66,8 @@ class FileStorage:
             'State': State, 'City': City, 'Amenity': Amenity,
             'Review': Review
         }
-        try:
-            with open(FileStorage.__file_path, 'r') as f:
-                temp = json.load(f)
-                for key, val in temp.items():
-                    self.all()[key] = classes[val['__class__']](**val)
-        except FileNotFoundError:
-            pass
+
+        with open(FileStorage.__file_path, 'r') as f:
+            temp = json.load(f)
+            for key, val in temp.items():
+                self.all()[key] = classes[val['__class__']](**val)
