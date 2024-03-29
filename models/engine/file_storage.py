@@ -8,9 +8,7 @@ file and deserializing JSON file to instances, managing a simple file-based
 storage system.
 """
 
-import logging
 import json
-import os
 
 
 class FileStorage:
@@ -30,7 +28,8 @@ class FileStorage:
         """Deletes obj from __objects if it’s inside"""
         if obj is not None:
             obj_key = "{}.{}".format(type(obj).__name__, obj.id)
-            FileStorage.__objects.pop(obj_key, None)
+            if obj_key in FileStorage.__objects:
+                del FileStorage.__objects[obj_key]
 
     def new(self, obj):
         """Adds new object to storage dictionary"""
@@ -46,13 +45,6 @@ class FileStorage:
 
     def reload(self):
         """Loads storage dictionary from file"""
-        if not os.path.exists(FileStorage.__file_path):
-            logging.warning(
-            f"File {FileStorage.__file_path} does not exist."
-            " No data loaded.")
-            # Early exit if the file does not exist
-            return
-
         from models.base_model import BaseModel
         from models.user import User
         from models.place import Place
@@ -66,8 +58,10 @@ class FileStorage:
             'State': State, 'City': City, 'Amenity': Amenity,
             'Review': Review
         }
-
-        with open(FileStorage.__file_path, 'r') as f:
-            temp = json.load(f)
-            for key, val in temp.items():
-                self.all()[key] = classes[val['__class__']](**val)
+        try:
+            with open(FileStorage.__file_path, 'r') as f:
+                temp = json.load(f)
+                for key, val in temp.items():
+                    self.all()[key] = classes[val['__class__']](**val)
+        except FileNotFoundError:
+            pass
