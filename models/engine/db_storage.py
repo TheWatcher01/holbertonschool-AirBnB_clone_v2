@@ -8,12 +8,13 @@ MySQL databases using SQLAlchemy ORM. It supports initialization, CRUD
 operations, and session management tailored to the hbnb project's requirements.
 """
 
-from sqlalchemy import create_engine, inspect
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy import create_engine
 from models.base_model import Base
+from models.state import State
+from models.city import City
 from os import getenv
-from contextlib import closing
 
 
 class DBStorage:
@@ -46,48 +47,38 @@ class DBStorage:
         Queries and returns all objects of a given class from the database.
         If no class is specified, it returns all objects in the database.
         """
-        query_result = {}
-        with closing(self.__session()) as session:
-            if cls:
-                objects = session.query(cls).all()
-                query_result = {
-                    f'{inspect(obj).class_.__name__}.{obj.id}': obj
-                    for obj in objects}
-            else:
-                for cls in Base._decl_class_registry.values():
-                    if hasattr(cls, '__tablename__'):
-                        objects = session.query(cls).all()
-                        for obj in objects:
-                            key = f'{inspect(obj).class_.__name__}.{obj.id}'
-                            query_result[key] = obj
-        return query_result
+        if cls:
+            return {f'{obj.__class__.__name__}.{obj.id}': obj
+                    for obj in self.__session.query(cls).all()}
+        else:
+            result = {}
+            for cls in [State, City]:  # List all models here
+                result.update(self.all(cls))
+            return result
 
     def new(self, obj):
         """
         Adds a new object to the current database session, ready for commit.
         """
-        with closing(self.__session()) as session:
-            session.add(obj)
+        self.__session.add(obj)
 
     def save(self):
         """
         Commits all changes of the current database session to the database.
         Handles exceptions by rolling back the session to the previous state.
         """
-        with closing(self.__session()) as session:
-            try:
-                session.commit()
-            except SQLAlchemyError as e:
-                session.rollback()
-                print(f'SQLAlchemy Exception: {e}')
+        try:
+            self.__session.commit()
+        except SQLAlchemyError as e:
+            self.__session.rollback()
+            print(f'SQLAlchemy Exception: {e}')
 
     def delete(self, obj=None):
         """
         Deletes an object from the current database session, if it's not None.
         """
         if obj:
-            with closing(self.__session()) as session:
-                session.delete(obj)
+            self.__session.delete(obj)
 
     def reload(self):
         """
