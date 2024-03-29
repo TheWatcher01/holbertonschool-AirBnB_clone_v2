@@ -43,7 +43,6 @@ class FileStorage:
             temp = {k: v.to_dict() for k, v in FileStorage.__objects.items()}
             json.dump(temp, f)
 
-
     def reload(self):
         """Loads storage dictionary from file"""
         from models.base_model import BaseModel
@@ -63,11 +62,9 @@ class FileStorage:
             with open(FileStorage.__file_path, 'r') as f:
                 temp = json.load(f)
                 for key, val in temp.items():
-                    # Ensure __class__ corresponds to a valid class before instantiation
                     if val['__class__'] in classes:
                         # Create a copy of val to manipulate
                         val_copy = val.copy()
-                        # Remove __class__ to avoid passing it as an argument to __init__
                         val_class = val_copy.pop('__class__', None)
                         if val_class:
                             self.all()[key] = classes[val_class](**val_copy)
