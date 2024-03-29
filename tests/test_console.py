@@ -10,6 +10,7 @@ from unittest.mock import patch, MagicMock
 from console import HBNBCommand
 from io import StringIO
 import unittest
+import re
 
 
 class TestDoCreate(unittest.TestCase):
