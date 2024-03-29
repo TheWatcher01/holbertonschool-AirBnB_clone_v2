@@ -76,9 +76,6 @@ class BaseModel:
         dict_repr = self.__dict__.copy()
         dict_repr['__class__'] = self.__class__.__name__
         for field in ['created_at', 'updated_at']:
-            if isinstance(getattr(self, field), datetime.datetime):
-                dict_repr[field] = getattr(self, field).isoformat()
-            else:
-                dict_repr[field] = getattr(self, field)
+            dict_repr[field] = getattr(self, field).isoformat()
         dict_repr.pop('_sa_instance_state', None)
         return dict_repr
