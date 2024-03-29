@@ -8,7 +8,7 @@ USE hbnb_root_db;
 -- and set the authentication method to 'mysql_native_password'
 CREATE USER IF NOT EXISTS 'root' @'localhost' IDENTIFIED
 WITH
-    mysql_native_password BY ',.Ted0256Ted.,';
+    mysql_native_password BY 'hbnb_root_pwd';
 
 -- Grant all privileges on the 'hbnb_root_db' database to the 'hbnb_root' user
 GRANT ALL PRIVILEGES ON hbnb_root_db.* TO 'root' @'localhost';
