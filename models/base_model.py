@@ -82,4 +82,3 @@ class BaseModel:
                     dict_repr[key] = value
         dict_repr['__class__'] = self.__class__.__name__
         return dict_repr
-
