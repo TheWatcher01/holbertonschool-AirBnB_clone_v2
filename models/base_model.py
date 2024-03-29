@@ -73,9 +73,13 @@ class BaseModel:
         Converts instance into a dictionary format for JSON serialization,
         including class name and converting datetime attributes to ISO format.
         """
-        dict_repr = self.__dict__.copy()
+        dict_repr = {}
+        for key, value in self.__dict__.items():
+            if key not in ['_sa_instance_state']:
+                if isinstance(value, datetime):
+                    dict_repr[key] = value.isoformat()
+                else:
+                    dict_repr[key] = value
         dict_repr['__class__'] = self.__class__.__name__
-        for field in ['created_at', 'updated_at']:
-            dict_repr[field] = getattr(self, field).isoformat()
-        dict_repr.pop('_sa_instance_state', None)
         return dict_repr
+
