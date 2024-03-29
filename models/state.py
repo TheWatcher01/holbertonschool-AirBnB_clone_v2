@@ -10,6 +10,8 @@ through a relationship or property.
 from sqlalchemy import Column, String
 from models.base_model import BaseModel, Base
 from sqlalchemy.orm import relationship
+from os import getenv
+from models.city import City  # Import City class
 
 
 class State(BaseModel, Base):
@@ -17,15 +19,17 @@ class State(BaseModel, Base):
     The State class is a representation of a state in the HBNB project. It
     inherits from the BaseModel and Base classes.
     """
-    __tablename__ = 'states'  # Table name in the database for States.
+    __tablename__ = 'states'
 
-    id = Column(String(60), primary_key=True, nullable=False)  # State id.
-    name = Column(String(128), nullable=False)  # State name.
+    id = Column(String(60), primary_key=True, nullable=False)
+    name = Column(String(128), nullable=False)
 
-    # 'cities' attribute represents a relationship with the City class. It
-    # allows for the management of cities that belong to a state. The 'backref'
-    # argument allows access to the State from a City object. The 'cascade'
-    # argument ensures that operations performed on a State are also performed
-    # on its associated City objects.
-    cities = relationship('City', backref='state',
-                          cascade='all, delete, delete-orphan')
+    if getenv('HBNB_TYPE_STORAGE') == 'db':
+        cities = relationship('City', backref='state',
+                              cascade='all, delete')
+    else:
+        @property
+        def cities(self):
+            from models import storage
+            return [city for city in storage.all(City)
+                    .values() if city.state_id == self.id]
