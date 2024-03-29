@@ -9,9 +9,8 @@ details, and associated amenities in the HBNB project.
 """
 
 from sqlalchemy import Column, String, Integer, Float, ForeignKey, Table
-from sqlalchemy.orm import relationship
 from models.base_model import Base, BaseModel
-from models.amenity import Amenity
+from sqlalchemy.orm import relationship
 
 # Association table for the many-to-many relationship between Place and Amenity
 place_amenity = Table(
