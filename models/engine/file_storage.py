@@ -27,9 +27,12 @@ class FileStorage:
     def delete(self, obj=None):
         """Deletes obj from __objects if it’s inside"""
         if obj is not None:
+            # Build the key from the given object
             obj_key = "{}.{}".format(type(obj).__name__, obj.id)
-            if obj_key in FileStorage.__objects:
-                del FileStorage.__objects[obj_key]
+            # Use `pop` to remove the object if it exists,
+            # without needing to explicitly check its presence
+            FileStorage.__objects.pop(obj_key, None)
+            FileStorage.__objects.pop(obj_key, None)
 
     def new(self, obj):
         """Adds new object to storage dictionary"""
