@@ -148,21 +148,20 @@ class HBNBCommand(cmd.Cmd):
     # Task 2. Console improvements
     def parse_value(self, value):
         """Parse a string value to the correct type."""
-        if value:
-            if value[0] == '"' and value[-1] == '"':
-                value = value.strip('"').replace('_', ' ').replace('\\"', '"')
-                return value  # Return string value without converting to int/float
-            elif '.' in value:
-                try:
-                    return float(value)
-                except ValueError:
-                    pass
-            else:
-                try:
-                    return int(value)
-                except ValueError:
-                    pass
-            return value  # Return the original value if it can't be converted
+        if value[0] == '"' and value[-1] == '"':
+            value = value.strip('"').replace('_', ' ').replace('\\"', '"')
+            return value  # Return string value without converting to int/float
+        elif '.' in value:
+            try:
+                return float(value)
+            except ValueError:
+                pass
+        else:
+            try:
+                return int(value)
+            except ValueError:
+                pass
+        return value  # Return the original value if it can't be converted
 
     def help_create(self):
         """ Help information for the create method """
