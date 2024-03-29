@@ -130,13 +130,13 @@ class HBNBCommand(cmd.Cmd):
         # Process each attribute=value pair
         for arg in arguments[1:]:
             if '=' not in arg:
-                print("** attribute format error **: {} (expected key=value)"
-                      .format(arg))
+                print(f"** attribute format error **: {arg} "
+                      "(expected key=value)")
                 continue
             key, value = arg.split('=', 1)
             if not key or not value:
-                print("** attribute format error **: {} (expected key=value)"
-                      .format(arg))
+                print(f"** attribute format error **: {arg} "
+                      "(expected key=value)")
                 continue
             # Assign the parsed value to the new instance
             setattr(new_instance, key, self.parse_value(value))
@@ -150,7 +150,7 @@ class HBNBCommand(cmd.Cmd):
         """Parse a string value to the correct type."""
         if value[0] == '"' and value[-1] == '"':
             value = value.strip('"').replace('_', ' ').replace('\\"', '"')
-            return value  # Return string value without converting to int/float
+            return value  # Direct return str valu without convert to int/float
         elif '.' in value:
             try:
                 return float(value)
