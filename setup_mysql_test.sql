@@ -6,7 +6,7 @@ USE hbnb_test_db;
 
 -- Create the user 'hbnb_test' with the password 'hbnb_test_pwd' if it does not already exist
 -- and set the authentication method to 'mysql_native_password'
-CREATE USER IF NOT EXISTS 'hbnb_test' @'localhost' IDENTIFIED 'hbnb_test_pwd';
+CREATE USER IF NOT EXISTS 'hbnb_test' @'localhost' IDENTIFIED BY 'hbnb_test_pwd';
 
 -- Grant all privileges on the 'hbnb_test_db' database to the 'hbnb_test' user
 GRANT ALL PRIVILEGES ON hbnb_test_db.* TO 'hbnb_test' @'localhost';
