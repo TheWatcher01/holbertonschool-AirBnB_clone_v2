@@ -3,17 +3,23 @@
 Module: user.py
 Author: Teddy Deberdt
 Date: 2024-03-27
-Description: Defines the User class, inheriting from BaseModel and Base,
-representing a user in the HBNB project with email, password, first_name,
-and last_name attributes.
+Description: Defines the User class in the HBNB project, inheriting from
+BaseModel and Base. It represents a user with attributes like email,
+password, first_name, and last_name, mapped to a database table.
 """
 
-from models.base_model import BaseModel
+from models.base_model import Base, BaseModel
+from sqlalchemy import Column, String
 
 
-class User(BaseModel):
-    """This class defines a user by various attributes"""
-    email = ''
-    password = ''
-    first_name = ''
-    last_name = ''
+class User(BaseModel, Base):
+    """
+    User class defines user attributes for the HBNB project, mapping to
+    the 'users' table in the database. It includes essential attributes
+    such as email and password, along with optional first and last names.
+    """
+    __tablename__ = 'users'
+    email = Column(String(128), nullable=False)
+    password = Column(String(128), nullable=False)
+    first_name = Column(String(128), nullable=True)
+    last_name = Column(String(128), nullable=True)
