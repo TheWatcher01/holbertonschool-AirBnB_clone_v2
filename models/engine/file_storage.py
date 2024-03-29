@@ -1,5 +1,13 @@
 #!/usr/bin/python3
-"""This module defines a class to manage file storage for hbnb clone"""
+"""
+Module: file_storage.py
+Author: Teddy Deberdt
+Date: 2024-03-27
+Description: Defines the FileStorage class for serializing instances to a JSON
+file and deserializing JSON file to instances, managing a simple file-based
+storage system.
+"""
+
 import json
 
 

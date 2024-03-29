@@ -6,3 +6,9 @@ Date: 2024-03-27
 Description: Defines the Amenity class, which inherits from BaseModel and Base,
 representing an amenity in the HBNB project with a name attribute.
 """
+
+from models.base_model import BaseModel
+
+
+class Amenity(BaseModel):
+    name = ""
