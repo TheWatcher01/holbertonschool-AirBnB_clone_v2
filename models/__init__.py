@@ -4,46 +4,17 @@ Module: __init__.py
 Author: Teddy Deberdt
 Date: 2024-03-27
 Description: Initializes the storage engine based on the HBNB_TYPE_STORAGE
-environment variable and the HBNB_ENV for environment management. Supports 'db'
-for DBStorage (database storage) and 'file' for FileStorage (file storage),
-with configurations differing based on whether the environment is development,
-test, or production.
+environment variable. Supports 'db' for DBStorage (database storage) and 'file'
+for FileStorage (file storage).
 """
 
-import os
-import subprocess
+from os import getenv
 
-# Determine the running environment
-env = os.getenv('HBNB_ENV', 'dev')  # Default to 'dev' if not specified
-
-# Path to the configuration files
-config_files = {
-    'dev': ('/home/thewatcher/Holberton/'
-            'holbertonschool-AirBnB_clone_v2/setup_mysql_dev.sql'),
-    'test': ('/home/thewatcher/Holberton/'
-             'holbertonschool-AirBnB_clone_v2/setup_mysql_test.sql'),
-    'prod': ('/home/thewatcher/Holberton/'
-             'holbertonschool-AirBnB_clone_v2/setup_mysql_prod.sql'),
-}
-
-if os.getenv('HBNB_TYPE_STORAGE') == 'db':
+if getenv('HBNB_TYPE_STORAGE') == 'db':
     from models.engine.db_storage import DBStorage
     storage = DBStorage()
 else:
     from models.engine.file_storage import FileStorage
     storage = FileStorage()
-
-# Adjust root password as per your recent changes for initial execution
-root_password = 'hbnb_root_pwd'
-
-# Execute the corresponding SQL configuration script based on the environment
-config_file = config_files.get(env)
-if config_file:
-    try:
-        # Execute as root for initial setup
-        subprocess.run(['mysql', '-u', 'root', f'-p{root_password}', '-e',
-                        f"source {config_file}"], check=True)
-    except subprocess.CalledProcessError as e:
-        print(f"Error executing {config_file}: {e}")
 
 storage.reload()
