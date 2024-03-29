@@ -7,9 +7,10 @@ Description: Defines the User class in the HBNB project, inheriting from
 BaseModel and Base. It represents a user with attributes like email,
 password, first_name, and last_name, mapped to a database table.
 """
-
 from models.base_model import Base, BaseModel
+from sqlalchemy.orm import relationship
 from sqlalchemy import Column, String
+
 
 
 class User(BaseModel, Base):
@@ -23,3 +24,4 @@ class User(BaseModel, Base):
     password = Column(String(128), nullable=False)
     first_name = Column(String(128), nullable=True)
     last_name = Column(String(128), nullable=True)
+    reviews = relationship("Review", backref="user", cascade="all, delete")
