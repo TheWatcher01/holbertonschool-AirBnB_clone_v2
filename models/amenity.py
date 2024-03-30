@@ -8,11 +8,9 @@ representing an amenity in the HBNB project with a name attribute, mapped to
 a database table.
 """
 
-from sqlalchemy import Column, String
-from sqlalchemy.orm import relationship
 from models.base_model import Base, BaseModel
-# Import the association table for many-to-many relationship
-from models.place import place_amenity
+from sqlalchemy.orm import relationship
+from sqlalchemy import Column, String
 
 
 class Amenity(BaseModel, Base):
@@ -23,6 +21,9 @@ class Amenity(BaseModel, Base):
     """
     __tablename__ = 'amenities'
     name = Column(String(128), nullable=False)
+
+    # Import the association table for many-to-many relationship
+    from models.place import place_amenity
 
     # Establishing a many-to-many relationship to Place through place_amenity
     places = relationship("Place", secondary=place_amenity,
