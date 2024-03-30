@@ -11,10 +11,15 @@ operations, and session management tailored to the hbnb project's requirements.
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import create_engine
+from models.amenity import Amenity
 from models.base_model import Base
+from models.place import Place
+from models.review import Review
 from models.state import State
 from models.city import City
 from os import getenv
+
+from models.user import User
 
 
 class DBStorage:
@@ -52,7 +57,7 @@ class DBStorage:
                     for obj in self.__session.query(cls).all()}
         else:
             result = {}
-            for cls in [State, City]:  # List all models here
+            for cls in [State, City, User, Review, Amenity, Place]:
                 result.update(self.all(cls))
             return result
 

@@ -12,7 +12,6 @@ from sqlalchemy.orm import relationship
 from sqlalchemy import Column, String
 
 
-
 class User(BaseModel, Base):
     """
     User class defines user attributes for the HBNB project, mapping to
