@@ -12,7 +12,7 @@ from sqlalchemy import Column, String, Integer, Float, ForeignKey, Table
 from models.base_model import Base, BaseModel
 from sqlalchemy.orm import relationship
 
-# Table d'association pour la relation many-to-many entre Place et Amenity
+# Association table for the many-to-many relationship between Place and Amenity
 place_amenity = Table(
     'place_amenity',
     Base.metadata,
@@ -24,7 +24,7 @@ place_amenity = Table(
 
 
 class Place(BaseModel, Base):
-    """ Représente un lieu d'hébergement dans le projet HBNB. """
+    """ Represents a place of accommodation in the HBNB project. """
     __tablename__ = 'places'
     city_id = Column(String(60), ForeignKey('cities.id'), nullable=False)
     user_id = Column(String(60), ForeignKey('users.id'), nullable=False)
@@ -36,8 +36,8 @@ class Place(BaseModel, Base):
     price_by_night = Column(Integer, default=0, nullable=False)
     latitude = Column(Float, nullable=True)
     longitude = Column(Float, nullable=True)
-    amenity_ids = []  # Pour compatibilité avec FileStorage
+    amenity_ids = []  # For compatibility with FileStorage
 
-    # Relation SQLAlchemy many-to-many avec Amenity
+    # SQLAlchemy many-to-many relationship with Amenity
     amenities = relationship(
         "Amenity", secondary=place_amenity, back_populates="place_amenities")
