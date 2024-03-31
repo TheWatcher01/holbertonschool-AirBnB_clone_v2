@@ -26,18 +26,22 @@ class BaseModel:
     updated_at = Column(DateTime, default=datetime.utcnow,
                         onupdate=datetime.utcnow, nullable=False)
 
-    def __init__(self, *arg, **kwargs):
+    def __init__(self, *args, **kwargs):
         """
         Initializes a new model instance using kwargs to set attributes,
         defaulting to generating a unique id and setting created_at and
         updated_at to the current datetime if not provided.
         """
-        self.id = kwargs.get('id', str(uuid.uuid4()))
-        datetime_fields = ['created_at', 'updated_at']
-        for field in datetime_fields:
-            setattr(self, field, kwargs.get(field, datetime.utcnow()))
+        if 'id' not in kwargs:
+            self.id = str(uuid.uuid4())
+        if 'created_at' not in kwargs:
+            self.created_at = datetime.utcnow()
+        if 'updated_at' not in kwargs:
+            self.updated_at = datetime.utcnow()
+
+        # Handling other kwargs
         for key, value in kwargs.items():
-            if key not in datetime_fields + ['id']:
+            if key not in ['id', 'created_at', 'updated_at', '__class__']:
                 setattr(self, key, value)
 
     def __str__(self):
@@ -73,12 +77,14 @@ class BaseModel:
         Converts instance into a dictionary format for JSON serialization,
         including class name and converting datetime attributes to ISO format.
         """
-        dict_repr = {}
-        for key, value in self.__dict__.items():
-            if key not in ['_sa_instance_state']:
-                if isinstance(value, datetime):
-                    dict_repr[key] = value.isoformat()
-                else:
-                    dict_repr[key] = value
+        dict_repr = {
+            key: value.isoformat() if isinstance(value, datetime) else value
+            for key, value in self.__dict__.items()
+            if key != '_sa_instance_state'
+        }
         dict_repr['__class__'] = self.__class__.__name__
+        # Ensure 'id', 'created_at', and 'updated_at' are included
+        dict_repr['id'] = self.id
+        dict_repr['created_at'] = self.created_at.isoformat()
+        dict_repr['updated_at'] = self.updated_at.isoformat()
         return dict_repr
