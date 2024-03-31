@@ -5,70 +5,65 @@ from models.place import Place
 
 
 class test_Place(test_basemodel):
-    """ """
+    """Tests for the Place model."""
 
     def __init__(self, *args, **kwargs):
-        """ """
+        """Initialize test case."""
         super().__init__(*args, **kwargs)
         self.name = "Place"
         self.value = Place
 
     def test_city_id(self):
-        """ """
+        """Test city_id attribute."""
         new = self.value()
-        self.assertTrue(type(new.city_id) == str or new.city_id is None)
+        self.assertIsNone(new.city_id)
 
     def test_user_id(self):
-        """ """
+        """Test user_id attribute."""
         new = self.value()
-        self.assertTrue(type(new.user_id) == str or new.user_id is None)
+        self.assertIsNone(new.user_id)
 
     def test_name(self):
-        """ """
+        """Test name attribute."""
         new = self.value()
-        self.assertTrue(type(new.name) == str or new.name is None)
+        self.assertIsNone(new.name)
 
     def test_description(self):
-        """ """
+        """Test description attribute."""
         new = self.value()
-        self.assertTrue(type(new.description) ==
-                        str or new.description is None)
+        self.assertIsNone(new.description)
 
     def test_number_rooms(self):
-        """ """
+        """Test number_rooms attribute."""
         new = self.value()
-        self.assertTrue(type(new.number_rooms) ==
-                        int or new.number_rooms is None)
+        self.assertEqual(new.number_rooms, 0)
 
     def test_number_bathrooms(self):
-        """ """
+        """Test number_bathrooms attribute."""
         new = self.value()
-        self.assertTrue(type(new.number_bathrooms) ==
-                        int or new.number_bathrooms is None)
+        self.assertEqual(new.number_bathrooms, 0)
 
     def test_max_guest(self):
-        """ """
+        """Test max_guest attribute."""
         new = self.value()
-        self.assertTrue(type(new.max_guest) == int or new.max_guest is None)
+        self.assertEqual(new.max_guest, 0)
 
     def test_price_by_night(self):
-        """ """
+        """Test price_by_night attribute."""
         new = self.value()
-        self.assertTrue(
-            type(new.price_by_night) == int or new.price_by_night is None
-        )
+        self.assertEqual(new.price_by_night, 0)
 
     def test_latitude(self):
-        """ """
+        """Test latitude attribute."""
         new = self.value()
-        self.assertTrue(type(new.latitude) == float or new.latitude is None)
+        self.assertIsNone(new.latitude)
 
     def test_longitude(self):
-        """ """
+        """Test longitude attribute."""
         new = self.value()
-        self.assertTrue(type(new.longitude) == float or new.longitude is None)
+        self.assertIsNone(new.longitude)
 
     def test_amenity_ids(self):
-        """ """
+        """Test amenity_ids attribute."""
         new = self.value()
-        self.assertEqual(type(new.amenity_ids), list)
+        self.assertEqual(new.amenity_ids, [])
