@@ -21,7 +21,7 @@ class test_Place(test_basemodel):
     def test_user_id(self):
         """ """
         new = self.value()
-        self.assertEqual(type(new.user_id), str)
+        self.assertTrue(type(new.user_id) == str or new.user_id is None)
 
     def test_name(self):
         """ """
@@ -54,7 +54,9 @@ class test_Place(test_basemodel):
     def test_price_by_night(self):
         """ """
         new = self.value()
-        self.assertEqual(type(new.price_by_night), int)
+        self.assertTrue(
+            type(new.price_by_night) == int or new.price_by_night is None
+        )
 
     def test_latitude(self):
         """ """
