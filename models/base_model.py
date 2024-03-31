@@ -7,6 +7,7 @@ Description: Defines the BaseModel class, serving as the base class for all
 other model classes in the hbnb project, facilitating the conversion of Python
 classes into SQLAlchemy Table objects for database storage.
 """
+
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, String, DateTime
 from datetime import datetime
@@ -27,63 +28,49 @@ class BaseModel:
                         onupdate=datetime.utcnow, nullable=False)
 
     def __init__(self, *args, **kwargs):
-        """
-        Initializes a new model instance using kwargs to set attributes,
-        defaulting to generating a unique id and setting created_at and
-        updated_at to the current datetime if not provided.
-        """
+        """Initializes a new BaseModel instance."""
         if 'id' not in kwargs:
             self.id = str(uuid.uuid4())
-        if 'created_at' not in kwargs:
-            self.created_at = datetime.utcnow()
-        if 'updated_at' not in kwargs:
-            self.updated_at = datetime.utcnow()
+        else:
+            self.id = kwargs['id']
 
-        # Handling other kwargs
+        self.created_at = kwargs.get('created_at', datetime.utcnow())
+        if isinstance(self.created_at, str):
+            self.created_at = datetime.fromisoformat(self.created_at)
+
+        self.updated_at = kwargs.get('updated_at', datetime.utcnow())
+        if isinstance(self.updated_at, str):
+            self.updated_at = datetime.fromisoformat(self.updated_at)
+
         for key, value in kwargs.items():
             if key not in ['id', 'created_at', 'updated_at', '__class__']:
                 setattr(self, key, value)
 
     def __str__(self):
-        """
-        Returns a string representation of the instance, excluding the
-        SQLAlchemy internal state attribute '_sa_instance_state'.
-        """
+        """Returns a string representation of the instance."""
         cls_name = self.__class__.__name__
         attrs = {key: value for key, value in self.__dict__.items()
                  if key != '_sa_instance_state'}
         return f"[{cls_name}] ({self.id}) {attrs}"
 
     def save(self):
-        """
-        Updates 'updated_at' to the current time and saves the instance to
-        the storage, utilizing the storage engine's 'new' and 'save' methods.
-        """
+        """Updates 'updated_at' to the current time and saves the instance."""
         from models import storage
         self.updated_at = datetime.utcnow()
         storage.new(self)
         storage.save()
 
     def delete(self):
-        """
-        Deletes the instance from storage by invoking the storage engine's
-        'delete' method.
-        """
+        """Deletes the instance from storage."""
         from models import storage
         storage.delete(self)
 
     def to_dict(self):
-        """
-        Converts instance into a dictionary format for JSON serialization,
-        including class name and converting datetime attributes to ISO format.
-        """
-        dict_repr = {
-            key: value.isoformat() if isinstance(value, datetime) else value
-            for key, value in self.__dict__.items()
-            if key != '_sa_instance_state'
-        }
+        """Converts instance into a dictionary for JSON serialization."""
+        dict_repr = {key: value.isoformat() if isinstance(value, datetime)
+                     else value for key, value in self.__dict__.items()
+                     if key != '_sa_instance_state'}
         dict_repr['__class__'] = self.__class__.__name__
-        # Ensure 'id', 'created_at', and 'updated_at' are included
         dict_repr['id'] = self.id
         dict_repr['created_at'] = self.created_at.isoformat()
         dict_repr['updated_at'] = self.updated_at.isoformat()
