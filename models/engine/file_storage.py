@@ -21,8 +21,9 @@ class FileStorage:
         if cls is None:
             return FileStorage.__objects
         else:
+            # Use isinstance() for checking the object's type
             return {k: v for k, v in FileStorage.__objects.items()
-                    if type(v) == cls}
+                    if isinstance(v, cls)}
 
     def delete(self, obj=None):
         """Deletes obj from __objects if it’s inside"""
