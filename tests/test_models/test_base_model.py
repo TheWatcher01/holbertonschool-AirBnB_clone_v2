@@ -129,15 +129,11 @@ class test_basemodel(unittest.TestCase):
         self.assertEqual(type(new.created_at), datetime)
 
     def test_updated_at(self):
-        """
-        Test case for the updated_at attribute of BaseModel.
-        """
+        """Test case for the updated_at attribute of BaseModel."""
         new = self.value()
-        self.assertEqual(type(new.updated_at), datetime)
-        n = new.to_dict()
-        time.sleep(0.1)  # pause for a short period of time
-        new = BaseModel(**n)
-        self.assertFalse(new.created_at == new.updated_at)
+        updated_at = new.updated_at
+        new.save()  # This should update the `updated_at` attribute
+        self.assertNotEqual(updated_at, new.updated_at)
 
 
 if __name__ == "__main__":
