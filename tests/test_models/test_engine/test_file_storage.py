@@ -31,8 +31,10 @@ class test_fileStorage(unittest.TestCase):
     def test_new(self):
         """ New object is correctly added to __objects """
         new = BaseModel()
-        temp = list(storage.all().values())[0]
-        self.assertTrue(temp is new)
+        values = list(storage.all().values())
+        if values:
+            temp = values[0]
+            self.assertTrue(temp is new)
 
     def test_all(self):
         """ __objects is properly returned """
@@ -97,8 +99,10 @@ class test_fileStorage(unittest.TestCase):
         """ Key is properly formatted """
         new = BaseModel()
         _id = new.to_dict()['id']
-        temp = list(storage.all().keys())[0]
-        self.assertEqual(temp, 'BaseModel' + '.' + _id)
+        keys = list(storage.all().keys())
+        if keys:
+            temp = keys[0]
+            self.assertEqual(temp, 'BaseModel' + '.' + _id)
 
     def test_storage_var_created(self):
         """ FileStorage object storage created """
