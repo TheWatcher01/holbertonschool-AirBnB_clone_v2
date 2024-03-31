@@ -21,4 +21,4 @@ elif [ "$HBNB_ENV" == "prod" ]; then
     export HBNB_MYSQL_PWD='hbnb_prod_pwd'
     export HBNB_MYSQL_HOST='localhost'
     export HBNB_MYSQL_DB='hbnb_prod_db'
-fi
+fi     
