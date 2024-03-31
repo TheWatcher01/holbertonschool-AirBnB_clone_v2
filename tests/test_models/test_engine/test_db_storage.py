@@ -15,7 +15,6 @@ import MySQLdb
 import os
 
 
-
 class TestDBStorageMySQLDirect(unittest.TestCase):
 
     @classmethod
