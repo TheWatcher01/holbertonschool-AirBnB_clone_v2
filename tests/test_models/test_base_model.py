@@ -83,8 +83,8 @@ class test_basemodel(unittest.TestCase):
         Test case for the __str__ method of BaseModel.
         """
         i = self.value()
-        self.assertEqual(str(i), '[{}] ({}) {}'.format(self.name, i.id,
-                         i.__dict__))
+        expected_str = '[{}] ({}) {}'.format(self.name, i.id, i.__dict__)
+        self.assertEqual(str(i), expected_str)
 
     def test_todict(self):
         """
@@ -108,11 +108,10 @@ class test_basemodel(unittest.TestCase):
         """
         n = {'id': 'my_id', 'created_at': datetime.utcnow(),
              'nonexistent': 'test'}
-        try:
-            new = self.value(**n)
-
-        except KeyError:
-            self.fail("Unexpected KeyError raised")
+        new = self.value(**n)
+        self.assertEqual(new.id, n['id'])
+        self.assertTrue(hasattr(new, 'created_at'))
+        self.assertFalse(hasattr(new, 'nonexistent'))
 
     def test_id(self):
         """
@@ -126,14 +125,18 @@ class test_basemodel(unittest.TestCase):
         Test case for the created_at attribute of BaseModel.
         """
         new = self.value()
-        self.assertEqual(type(new.created_at), datetime.datetime)
+        self.assertEqual(type(new.created_at), datetime)
 
     def test_updated_at(self):
         """
         Test case for the updated_at attribute of BaseModel.
         """
         new = self.value()
-        self.assertEqual(type(new.updated_at), datetime.datetime)
+        self.assertEqual(type(new.updated_at), datetime)
         n = new.to_dict()
         new = BaseModel(**n)
         self.assertFalse(new.created_at == new.updated_at)
+
+
+if __name__ == "__main__":
+    unittest.main()
