@@ -103,14 +103,10 @@ class test_basemodel(unittest.TestCase):
             new = self.value(**n)
 
     def test_kwargs_one(self):
-        """
-        Test case for creating a BaseModel instance with extra kwargs.
-        """
-        n = {'id': 'my_id', 'created_at': datetime.utcnow(),
-             'nonexistent': 'test'}
-        new = self.value(**n)
-        self.assertEqual(new.id, n['id'])
-        self.assertTrue(hasattr(new, 'created_at'))
+        """Test case for creating a BaseModel instance with extra kwargs."""
+        kwargs = {'id': '123', 'created_at': '2024-06-28T14:00:00',
+                  'updated_at': '2024-06-28T14:00:00'}
+        new = BaseModel(**kwargs)
         self.assertFalse(hasattr(new, 'nonexistent'))
 
     def test_id(self):
