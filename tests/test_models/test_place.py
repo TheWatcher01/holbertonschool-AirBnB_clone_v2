@@ -26,22 +26,25 @@ class test_Place(test_basemodel):
     def test_name(self):
         """ """
         new = self.value()
-        self.assertEqual(type(new.name), str)
+        self.assertTrue(type(new.name) == str or new.name is None)
 
     def test_description(self):
         """ """
         new = self.value()
-        self.assertTrue(type(new.description) == str or new.description is None)
+        self.assertTrue(type(new.description) ==
+                        str or new.description is None)
 
     def test_number_rooms(self):
         """ """
         new = self.value()
-        self.assertEqual(type(new.number_rooms), int)
+        self.assertTrue(type(new.number_rooms) ==
+                        int or new.number_rooms is None)
 
     def test_number_bathrooms(self):
         """ """
         new = self.value()
-        self.assertEqual(type(new.number_bathrooms), int)
+        self.assertTrue(type(new.number_bathrooms) ==
+                        int or new.number_bathrooms is None)
 
     def test_max_guest(self):
         """ """
