@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """
 Test module for the Amenity class.
+Improved for clarity and consistency.
 """
 from tests.test_models.test_base_model import test_basemodel
 from models.amenity import Amenity
@@ -8,22 +9,20 @@ from models.amenity import Amenity
 
 class TestAmenity(test_basemodel):
     """
-    Test class for verifying the Amenity model.
+    Test class for verifying Amenity model with emphasis on 'name' attribute.
     """
 
     def __init__(self, *args, **kwargs):
         """
-        Initialize the tests for the Amenity class by specifying the model
-        name and class.
+        Initialize the tests for the Amenity class by specifying the class.
         """
         super().__init__(*args, **kwargs)
-        self.model_name = "Amenity"
         self.model_class = Amenity
 
     def test_name_attribute(self):
         """
         Test that the 'name' attribute of an Amenity instance is always a
-        non-null string.
+        non-null string, aligning with database constraints.
         """
         # Create an Amenity instance with a valid name.
         amenity_with_name = self.model_class(name="Wifi")
