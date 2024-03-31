@@ -26,7 +26,7 @@ class BaseModel:
     updated_at = Column(DateTime, default=datetime.utcnow,
                         onupdate=datetime.utcnow, nullable=False)
 
-    def __init__(self, **kwargs):
+    def __init__(self, *arg, **kwargs):
         """
         Initializes a new model instance using kwargs to set attributes,
         defaulting to generating a unique id and setting created_at and
