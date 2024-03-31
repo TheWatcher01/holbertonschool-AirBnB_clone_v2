@@ -15,5 +15,6 @@ class test_state(test_basemodel):
 
     def test_name3(self):
         """ """
-        new = self.value()
-        self.assertTrue(type(new.name) == str or new.name is None)
+        new = self.value(name="Test State")
+        self.assertIsInstance(new.name, str)
+        self.assertIsNotNone(new.name)
