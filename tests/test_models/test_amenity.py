@@ -14,6 +14,6 @@ class test_Amenity(test_basemodel):
         self.value = Amenity
 
     def test_name2(self):
-        """Test that the name attribute of Amenity can only be a non-empty string."""
+        """Test that name attribute of Amenity can only be non-empty string."""
         new = self.value(name="WiFi")
         self.assertTrue(isinstance(new.name, str) and new.name != "")
