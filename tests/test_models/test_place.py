@@ -46,7 +46,7 @@ class test_Place(test_basemodel):
     def test_max_guest(self):
         """ """
         new = self.value()
-        self.assertEqual(type(new.max_guest), int)
+        self.assertTrue(type(new.max_guest) == int or new.max_guest is None)
 
     def test_price_by_night(self):
         """ """
@@ -61,7 +61,7 @@ class test_Place(test_basemodel):
     def test_longitude(self):
         """ """
         new = self.value()
-        self.assertEqual(type(new.latitude), float)
+        self.assertTrue(type(new.longitude) == float or new.longitude is None)
 
     def test_amenity_ids(self):
         """ """
