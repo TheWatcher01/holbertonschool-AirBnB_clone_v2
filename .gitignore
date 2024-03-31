@@ -97,5 +97,3 @@
 **/.pyre/
 # Vscode settings
 **/.vscode/
-# Json files
-**/*.json
