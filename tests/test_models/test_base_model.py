@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """
 Module: test_base_model.py
-Author: Teddy Deberdt
+Author: TheWatcher01
 Date: 2024-03-27
 Description: This module contains the unit tests for the BaseModel class.
 """

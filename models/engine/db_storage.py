@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """
 Module: db_storage.py
-Author: Teddy Deberdt
+Author: TheWatcher01
 Date: 2024-03-25
 Description: This module defines the DBStorage class for interactions with
 MySQL databases using SQLAlchemy ORM. It supports initialization, CRUD

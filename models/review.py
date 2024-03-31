@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """
 Module: review.py
-Author: Teddy Deberdt
+Author: TheWatcher01
 Date: 2024-03-27
 Description: Defines the Review class in the HBNB project, inheriting from
 BaseModel and Base. Represents a review with attributes including place_id,

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """
 Module: amenity.py
-Author: Teddy Deberdt
+Author: TheWatcher01
 Date: 2024-03-27
 Description: This module updates the Amenity class to inherit from BaseModel
 and Base. It represents an amenity in the HBNB project with a name attribute,

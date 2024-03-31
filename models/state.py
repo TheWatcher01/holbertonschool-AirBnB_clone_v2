@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """
 Module: state.py
-Author: Teddy Deberdt
+Author: TheWatcher01
 Date: 2024-03-27
 Description: This module defines the State class for the HBNB project. The
 State class represents states with a 'name' attribute and manages cities

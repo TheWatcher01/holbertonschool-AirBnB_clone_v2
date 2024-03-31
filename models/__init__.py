@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """
 Module: __init__.py
-Author: Teddy Deberdt
+Author: TheWatcher01
 Date: 2024-03-27
 Description: This module is responsible for initializing the storage engine.
 The type of storage engine is determined by the 'HBNB_TYPE_STORAGE' environment

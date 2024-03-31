@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """
 File: test_console.py
-Author: Teddy Deberdt
+Author: TheWatcher01
 Date: 2024-03-25
 Description: Tests for HBNB console command 'create' with improved test
 coverage and practices.

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """
 Module: file_storage.py
-Author: Teddy Deberdt
+Author: TheWatcher01
 Date: 2024-03-27
 Description: Defines the FileStorage class for serializing instances to a JSON
 file and deserializing JSON file to instances, managing a simple file-based

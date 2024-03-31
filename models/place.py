@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """
 Module: place.py
-Author: Teddy Deberdt
+Author: TheWatcher01
 Date: 2024-03-27
 Description: Updates the Place class to inherit from BaseModel and Base,
 mapping it to a database table with attributes for location, accommodation
