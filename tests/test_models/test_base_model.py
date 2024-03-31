@@ -84,6 +84,9 @@ class test_basemodel(unittest.TestCase):
         """
         i = self.value()
         expected_str = '[{}] ({}) {}'.format(self.name, i.id, i.__dict__)
+        expected_str = expected_str.replace(
+            "_sa_instance_state: <sqlalchemy.orm.state.InstanceState object "
+            "at 0x7f1f8c7cbb80>", "")
         self.assertEqual(str(i), expected_str)
 
     def test_todict(self):
