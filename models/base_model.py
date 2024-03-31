@@ -10,6 +10,7 @@ classes into SQLAlchemy Table objects for database storage.
 
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, String, DateTime
+from sqlalchemy.exc import SQLAlchemyError
 from datetime import datetime
 import uuid
 
@@ -31,16 +32,8 @@ class BaseModel:
         """Initializes a new BaseModel instance."""
         if 'id' not in kwargs:
             self.id = str(uuid.uuid4())
-        else:
-            self.id = kwargs['id']
-
         self.created_at = kwargs.get('created_at', datetime.utcnow())
-        if isinstance(self.created_at, str):
-            self.created_at = datetime.fromisoformat(self.created_at)
-
         self.updated_at = kwargs.get('updated_at', datetime.utcnow())
-        if isinstance(self.updated_at, str):
-            self.updated_at = datetime.fromisoformat(self.updated_at)
 
         for key, value in kwargs.items():
             if key not in ['id', 'created_at', 'updated_at', '__class__']:
@@ -57,8 +50,13 @@ class BaseModel:
         """Updates 'updated_at' to the current time and saves the instance."""
         from models import storage
         self.updated_at = datetime.utcnow()
-        storage.new(self)
-        storage.save()
+        if not self in storage._DBStorage__session:
+            storage.new(self)
+        try:
+            storage._DBStorage__session.commit()
+        except SQLAlchemyError as e:
+            storage._DBStorage__session.rollback()
+            print(f"SQLAlchemy Exception: {e}")
 
     def delete(self):
         """Deletes the instance from storage."""
