@@ -11,6 +11,8 @@ import os
 from models import storage
 from models.state import State
 from models.city import City
+from sqlalchemy.exc import SQLAlchemyError
+from uuid import uuid4
 
 
 class TestDBStorage(unittest.TestCase):
@@ -30,6 +32,11 @@ class TestDBStorage(unittest.TestCase):
         """Clean up the database environment after all tests."""
         storage._DBStorage__session.close()
         storage._DBStorage__engine.dispose()
+        del os.environ['HBNB_MYSQL_USER']
+        del os.environ['HBNB_MYSQL_PWD']
+        del os.environ['HBNB_MYSQL_HOST']
+        del os.environ['HBNB_MYSQL_DB']
+        del os.environ['HBNB_ENV']
 
     def setUp(self):
         """Setup test environment before each test."""
@@ -41,9 +48,7 @@ class TestDBStorage(unittest.TestCase):
         storage._DBStorage__session.close()
 
     def test_all(self):
-        """
-        all() returns dictionary of all objects when no class is specified.
-        """
+        """all() returns dict of all objects when no class is specified."""
         all_objs = storage.all()
         self.assertIsInstance(all_objs, dict)
 
@@ -55,13 +60,17 @@ class TestDBStorage(unittest.TestCase):
 
     def test_new(self):
         """Test that new() correctly adds an object to the session."""
-        new_state = State(name="TestState")
+        new_state = State(name=f"TestState_{uuid4()}")
         storage.new(new_state)
-        self.assertIn(new_state, storage._DBStorage__session.new)
+        storage.save()
+        all_states = storage.all(State)
+        self.assertIn(
+            new_state.id, [state.id for state in all_states.values()])
 
     def test_save(self):
         """Test that save() correctly commits changes to the database."""
-        new_city = City(name="TestCity", state_id="TestStateId")
+        new_city = City(name=f"TestCity_{uuid4()}",
+                        state_id=f"TestStateId_{uuid4()}")
         storage.new(new_city)
         storage.save()
         # Assuming id is not None if committed
@@ -69,20 +78,25 @@ class TestDBStorage(unittest.TestCase):
 
     def test_delete(self):
         """Test that delete() correctly removes an object from the session."""
-        new_state = State(name="ToDeleteState")
+        new_state = State(name=f"ToDeleteState_{uuid4()}")
         storage.new(new_state)
         storage.save()
         storage.delete(new_state)
-        self.assertNotIn(new_state, storage.all(State).values())
+        storage.save()
+        all_states = storage.all(State)
+        self.assertNotIn(
+            new_state.id, [state.id for state in all_states.values()])
 
     def test_reload(self):
         """That reload() correctly loads objects from database into session."""
-        new_state = State(name="TestState")
+        new_state = State(name=f"TestState_{uuid4()}")
         storage.new(new_state)
         storage.save()
         storage._DBStorage__session.expunge(new_state)
         storage.reload()
-        self.assertIn(new_state, storage.all(State).values())
+        reloaded_state = storage.all(State).get(f"State.{new_state.id}")
+        self.assertIsNotNone(reloaded_state)
+        self.assertEqual(reloaded_state.name, new_state.name)
 
 
 if __name__ == "__main__":
