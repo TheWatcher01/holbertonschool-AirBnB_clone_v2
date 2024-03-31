@@ -11,7 +11,6 @@ import os
 from models import storage
 from models.state import State
 from models.city import City
-from sqlalchemy.exc import SQLAlchemyError
 from uuid import uuid4
 
 
