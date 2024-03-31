@@ -10,6 +10,7 @@ from models.base_model import BaseModel
 from datetime import datetime
 import unittest
 import json
+import re
 import os
 
 
@@ -84,9 +85,9 @@ class test_basemodel(unittest.TestCase):
         """
         i = self.value()
         expected_str = '[{}] ({}) {}'.format(self.name, i.id, i.__dict__)
-        expected_str = expected_str.replace(
-            "_sa_instance_state: <sqlalchemy.orm.state.InstanceState object "
-            "at 0x7f1f8c7cbb80>", "")
+        expected_str = re.sub(
+            r"'_sa_instance_state': <sqlalchemy.orm.state.InstanceState "
+            r"object at 0x[0-9a-fA-F]+>, ", "", expected_str)
         self.assertEqual(str(i), expected_str)
 
     def test_todict(self):
