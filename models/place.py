@@ -1,55 +1,31 @@
 #!/usr/bin/python3
 """
-Module: place.py
+Module: __init__.py
 Author: Teddy Deberdt
 Date: 2024-03-27
-Description: Updates the Place class to inherit from BaseModel and Base,
-mapping it to a database table with attributes for location, accommodation
-details, and associated amenities in the HBNB project.
+Description: This module is responsible for initializing the storage engine.
+The type of storage engine is determined by the 'HBNB_TYPE_STORAGE' environment
+variable. It supports 'db' for DBStorage (database storage) and 'file' for
+FileStorage (file storage).
 """
 
-from sqlalchemy import Column, String, Integer, Float, ForeignKey, Table
-from models.base_model import Base, BaseModel
-from sqlalchemy.orm import relationship
+# Importing the getenv function from the os module. This function is used to
+# read the environment variable.
+from os import getenv
 
-# Association table for the many-to-many relationship between Place and Amenity
-place_amenity = Table(
-    'place_amenity',
-    Base.metadata,
-    Column(
-        'place_id',
-        String(60),
-        ForeignKey('places.id'),
-        primary_key=True,
-        nullable=False
-    ),
-    Column(
-        'amenity_id',
-        String(60),
-        ForeignKey('amenities.id'),
-        primary_key=True,
-        nullable=False
-    )
-)
+# Checking the value of the 'HBNB_TYPE_STORAGE' environment variable. If it's
+# 'db', DBStorage engine is used. Otherwise, FileStorage engine is used.
+if getenv('HBNB_TYPE_STORAGE') == 'db':
+    # Importing the DBStorage class from the models.engine.db_storage module.
+    from models.engine.db_storage import DBStorage
+    # Creating an instance of the DBStorage class.
+    storage = DBStorage()
+else:
+    # Importing FileStorage class from models.engine.file_storage module.
+    from models.engine.file_storage import FileStorage
+    # Creating an instance of the FileStorage class.
+    storage = FileStorage()
 
-
-class Place(BaseModel, Base):
-    """ Represents a place for accommodation in the HBNB project. """
-    __tablename__ = 'places'
-    city_id = Column(String(60), ForeignKey('cities.id'), nullable=False)
-    user_id = Column(String(60), ForeignKey('users.id'), nullable=False)
-    name = Column(String(128), nullable=False)
-    description = Column(String(1024), nullable=True)
-    number_rooms = Column(Integer, default=0, nullable=False)
-    number_bathrooms = Column(Integer, default=0, nullable=False)
-    max_guest = Column(Integer, default=0, nullable=False)
-    price_by_night = Column(Integer, default=0, nullable=False)
-    latitude = Column(Float, nullable=True)
-    longitude = Column(Float, nullable=True)
-    # This will be ignored by SQLAlchemy but kept for FileStorage compatibility
-    amenity_ids = []
-
-    # SQLAlchemy relationship for many-to-many with Amenity
-    amenities = relationship(
-        "Amenity", secondary=place_amenity,
-        viewonly=False, backref="place_amenities")
+# Calling reload method of storage instance. This method is responsible
+# for deserializing the JSON file to objects.
+storage.reload()
