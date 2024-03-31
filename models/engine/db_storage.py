@@ -11,15 +11,14 @@ operations, and session management tailored to the hbnb project's requirements.
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import create_engine
-from models.amenity import Amenity
 from models.base_model import Base
+from models.amenity import Amenity
+from models.city import City
 from models.place import Place
 from models.review import Review
 from models.state import State
-from models.city import City
-from os import getenv
-
 from models.user import User
+from os import getenv
 
 
 class DBStorage:
@@ -32,11 +31,7 @@ class DBStorage:
     __session = None
 
     def __init__(self):
-        """
-        Initializes the DBStorage instance by creating an engine linked to
-        MySQL database specified via environment variables. It conditionally
-        drops all tables if the environment is set to 'test'.
-        """
+        """Initializes the DBStorage instance."""
         user = getenv('HBNB_MYSQL_USER')
         pwd = getenv('HBNB_MYSQL_PWD')
         host = getenv('HBNB_MYSQL_HOST')
@@ -45,57 +40,46 @@ class DBStorage:
         self.__engine = create_engine(conn_str, pool_pre_ping=True)
 
         if getenv('HBNB_ENV') == 'test':
+            # Drop all tables for a clean test environment
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
-        """
-        Queries and returns all objects of a given class from the database.
-        If no class is specified, it returns all objects in the database.
-        """
+        """Queries and returns all objects of a given class or all objects."""
+        session = self.__session()
         if cls:
-            return {f'{obj.__class__.__name__}.{obj.id}': obj
-                    for obj in self.__session.query(cls).all()}
+            objects = session.query(cls).all()
         else:
-            result = {}
-            for cls in [State, City, User, Review, Amenity, Place]:
-                result.update(self.all(cls))
-            return result
+            classes = [State, City, User, Review, Amenity, Place]
+            objects = [
+                item for cls in classes for item in session.query(cls).all()]
+
+        return {f'{obj.__class__.__name__}.{obj.id}': obj for obj in objects}
 
     def new(self, obj):
-        """
-        Adds a new object to the current database session, ready for commit.
-        """
+        """Adds a new object to the current database session."""
         self.__session.add(obj)
 
     def save(self):
-        """
-        Commits all changes of the current database session to the database.
-        Handles exceptions by rolling back the session to the previous state.
-        """
+        """Commits all changes to the database."""
         try:
             self.__session.commit()
         except SQLAlchemyError as e:
             self.__session.rollback()
+            # Consider logging this exception as well
             print(f'SQLAlchemy Exception: {e}')
 
     def delete(self, obj=None):
-        """
-        Deletes an object from the current database session, if it's not None.
-        """
+        """Deletes an object from the current database session."""
         if obj:
             self.__session.delete(obj)
 
     def reload(self):
-        """
-        Recreates the database schema and initializes a new session.
-        """
+        """Reloads all tables from the database and recreates the session."""
         Base.metadata.create_all(self.__engine)
         session_factory = sessionmaker(
             bind=self.__engine, expire_on_commit=False)
-        self.__session = scoped_session(session_factory)
+        self.__session = scoped_session(session_factory)()
 
     def close(self):
-        """
-        Closes the current SQLAlchemy session, ensuring clean-up.
-        """
+        """Closes the current SQLAlchemy session."""
         self.__session.remove()
