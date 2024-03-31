@@ -7,8 +7,8 @@ Description: This module contains the unit tests for the BaseModel class.
 """
 
 from models.base_model import BaseModel
+from datetime import datetime
 import unittest
-import datetime
 import json
 import os
 
@@ -106,7 +106,7 @@ class test_basemodel(unittest.TestCase):
         """
         Test case for creating a BaseModel instance with extra kwargs.
         """
-        n = {'id': 'my_id', 'created_at': datetime.now(),
+        n = {'id': 'my_id', 'created_at': datetime.utcnow(),
              'nonexistent': 'test'}
         try:
             new = self.value(**n)
