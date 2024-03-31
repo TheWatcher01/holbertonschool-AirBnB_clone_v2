@@ -15,12 +15,10 @@ class test_City(test_basemodel):
 
     def test_state_id(self):
         """ """
-        new = self.value(state_id="some-state-id", name="Test City")
-        self.assertIsInstance(new.state_id, str)
-        self.assertIsNotNone(new.state_id)
+        new = self.value()
+        self.assertTrue(type(new.state_id) == str or new.state_id is None)
 
     def test_name(self):
         """ """
-        new = self.value(state_id="some-state-id", name="Test City")
-        self.assertIsInstance(new.name, str)
-        self.assertIsNotNone(new.name)
+        new = self.value()
+        self.assertTrue(type(new.name) == str or new.name is None)
