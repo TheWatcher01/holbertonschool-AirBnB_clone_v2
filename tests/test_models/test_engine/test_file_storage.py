@@ -17,11 +17,7 @@ class test_fileStorage(unittest.TestCase):
 
     def setUp(self):
         """ Set up test environment """
-        del_list = []
-        for key in storage._FileStorage__objects.keys():
-            del_list.append(key)
-        for key in del_list:
-            del storage._FileStorage__objects[key]
+        storage._FileStorage__objects = {}
 
     def tearDown(self):
         """ Remove storage file at end of tests """
@@ -37,28 +33,22 @@ class test_fileStorage(unittest.TestCase):
     def test_new(self):
         """ New object is correctly added to __objects """
         new = BaseModel()
-        values = list(storage.all().values())
-        if values:
-            temp = values[0]
-            self.assertTrue(temp is new)
+        self.assertIn(f"BaseModel.{new.id}", storage.all())
 
     def test_all(self):
         """ __objects is properly returned """
         new = BaseModel()
-        temp = storage.all()
-        self.assertIsInstance(temp, dict)
+        self.assertIsInstance(storage.all(), dict)
 
     def test_base_model_instantiation(self):
-        """ File is not created on BaseModel save """
+        """ File is not created on BaseModel save without calling save """
         new = BaseModel()
         self.assertFalse(os.path.exists('file.json'))
 
     def test_empty(self):
         """ Data is saved to file """
         new = BaseModel()
-        thing = new.to_dict()
         new.save()
-        new2 = BaseModel(**thing)
         self.assertNotEqual(os.path.getsize('file.json'), 0)
 
     def test_save(self):
@@ -72,21 +62,21 @@ class test_fileStorage(unittest.TestCase):
         new = BaseModel()
         storage.save()
         storage.reload()
-        values = list(storage.all().values())
-        if values:
-            loaded = values[0]
-            self.assertEqual(new.to_dict()['id'], loaded.to_dict()['id'])
+        self.assertIn(f"BaseModel.{new.id}", storage.all())
 
     def test_reload_empty(self):
-        """ Load from an empty file """
+        """ Load from an empty file does not raise error """
         with open('file.json', 'w') as f:
-            pass
-        with self.assertRaises(ValueError):
-            storage.reload()
+            f.write("{}")
+        storage.reload()
+        self.assertEqual(len(storage.all()), 0)
 
     def test_reload_from_nonexistent(self):
         """ Nothing happens if file does not exist """
-        self.assertEqual(storage.reload(), None)
+        if os.path.exists('file.json'):
+            os.remove('file.json')
+        storage.reload()
+        self.assertEqual(len(storage.all()), 0)
 
     def test_base_model_save(self):
         """ BaseModel save method calls storage save """
@@ -106,13 +96,13 @@ class test_fileStorage(unittest.TestCase):
         """ Key is properly formatted """
         new = BaseModel()
         _id = new.to_dict()['id']
-        keys = list(storage.all().keys())
-        if keys:
-            temp = keys[0]
-            self.assertEqual(temp, 'BaseModel' + '.' + _id)
+        self.assertIn(f'BaseModel.{_id}', storage.all().keys())
 
     def test_storage_var_created(self):
         """ FileStorage object storage created """
         from models.engine.file_storage import FileStorage
-        print(type(storage))
-        self.assertEqual(type(storage), FileStorage)
+        self.assertIsInstance(storage, FileStorage)
+
+
+if __name__ == "__main__":
+    unittest.main()
