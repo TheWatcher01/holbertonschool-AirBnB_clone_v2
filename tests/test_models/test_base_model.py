@@ -10,6 +10,7 @@ from models.base_model import BaseModel
 from datetime import datetime
 import unittest
 import json
+import time
 import re
 import os
 
@@ -134,6 +135,7 @@ class test_basemodel(unittest.TestCase):
         new = self.value()
         self.assertEqual(type(new.updated_at), datetime)
         n = new.to_dict()
+        time.sleep(0.1)  # pause for a short period of time
         new = BaseModel(**n)
         self.assertFalse(new.created_at == new.updated_at)
 
