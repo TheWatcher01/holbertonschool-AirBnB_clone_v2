@@ -7,11 +7,11 @@ Description: This module defines the State class for the HBNB project. The
 State class represents states with a 'name' attribute and manages cities
 through a relationship or property.
 """
-from sqlalchemy import Column, String
 from models.base_model import BaseModel, Base
 from sqlalchemy.orm import relationship
+from sqlalchemy import Column, String
+from models.city import City
 from os import getenv
-from models.city import City  # Import City class
 
 
 class State(BaseModel, Base):
