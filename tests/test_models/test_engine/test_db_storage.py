@@ -1,3 +1,11 @@
+#!/usr/bin/python3
+"""
+File: test_db_storage.py
+Author: TheWatcher01
+Date: 2024-03-31
+Description: Unit tests for db_storage.py with a real database connection.
+"""
+
 import MySQLdb
 import unittest
 import os
