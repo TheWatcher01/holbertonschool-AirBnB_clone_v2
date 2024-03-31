@@ -72,7 +72,7 @@ class TestFileStorage(unittest.TestCase):
     def test_reload_empty(self):
         """Load from an empty file does not raise error"""
         with open('file.json', 'w') as f:
-            pass
+            f.write("{}")
         storage.reload()
         self.assertEqual(len(storage.all()), 0)
 
