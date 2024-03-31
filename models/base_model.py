@@ -50,7 +50,7 @@ class BaseModel:
         """Updates 'updated_at' to the current time and saves the instance."""
         from models import storage
         self.updated_at = datetime.utcnow()
-        if not self in storage._DBStorage__session:
+        if self not in storage._DBStorage__session:
             storage.new(self)
         try:
             storage._DBStorage__session.commit()
