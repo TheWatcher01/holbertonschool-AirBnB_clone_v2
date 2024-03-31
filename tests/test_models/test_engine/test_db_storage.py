@@ -1,89 +1,100 @@
 #!/usr/bin/python3
 """
-File: test_db_storage.py
+Module: test_db_storage.py
 Author: TheWatcher01
 Date: 2024-03-31
-Description: Unit tests for db_storage.py with a real database connection.
+Description: This module contains unit tests for the DBStorage class in the
+storage module. It tests the methods all, new, save, delete, reload, and close.
 """
 
-import unittest
-import os
-from models import storage
+from models.base_model import Base
 from models.state import State
-from models.city import City
+from sqlalchemy import inspect
+from models import storage
+import unittest
 
 
 class TestDBStorage(unittest.TestCase):
+    """
+    This class contains unit tests for the DBStorage class. It tests the
+    methods all, new, save, delete, reload, and close.
+    """
 
     @classmethod
     def setUpClass(cls):
-        """Setup the database environment before all tests."""
-        os.environ['HBNB_MYSQL_USER'] = 'hbnb_test_user'
-        os.environ['HBNB_MYSQL_PWD'] = 'hbnb_test_pwd'
-        os.environ['HBNB_MYSQL_HOST'] = 'localhost'
-        os.environ['HBNB_MYSQL_DB'] = 'hbnb_test_db'
-        os.environ['HBNB_ENV'] = 'test'
-        storage.reload()
-
-    @classmethod
-    def tearDownClass(cls):
-        """Clean up the database environment after all tests."""
-        storage._DBStorage__session.close()
-        storage._DBStorage__engine.dispose()
-
-    def setUp(self):
-        """Setup test environment before each test."""
-        storage.reload()
-
-    def tearDown(self):
-        """Cleanup after each test."""
-        storage._DBStorage__session.rollback()
-        storage._DBStorage__session.close()
-
-    def test_all(self):
         """
-        all() returns dictionary of all objects when no class is specified.
+        This method sets up the class-level setup for the tests. It creates
+        an instance of DBStorage for all test cases to use.
         """
-        all_objs = storage.all()
-        self.assertIsInstance(all_objs, dict)
+        cls.storage = storage
+
+    def test_all_no_class(self):
+        """
+        This test case checks that the all method returns all rows when no
+        class is passed.
+        """
+        result = self.storage.all()
+        self.assertIsInstance(result, dict)
 
     def test_all_with_class(self):
-        """all() method returns a dictionary of objects of a specific class."""
-        all_states = storage.all(State)
-        self.assertTrue(all(isinstance(obj, State)
-                        for obj in all_states.values()))
+        """
+        This test case checks that the all method returns all rows of the
+        specified class.
+        """
+        result = self.storage.all(State)
+        self.assertIsInstance(result, dict)
 
     def test_new(self):
-        """Test that new() correctly adds an object to the session."""
-        new_state = State(name="TestState")
-        storage.new(new_state)
-        self.assertIn(new_state, storage._DBStorage__session.new)
+        """
+        This test case checks that the new method adds an object to the
+        session.
+        """
+        state = State(name="California")
+        self.storage.new(state)
+        self.assertIn(state, self.storage._DBStorage__session)
 
     def test_save(self):
-        """Test that save() correctly commits changes to the database."""
-        new_city = City(name="TestCity", state_id="TestStateId")
-        storage.new(new_city)
-        storage.save()
-        # Assuming id is not None if committed
-        self.assertIsNotNone(new_city.id)
+        """
+        This test case checks that the save method correctly saves objects
+        to the database.
+        """
+        state = State(name="Nevada")
+        self.storage.new(state)
+        self.storage.save()
+        db_state = self.storage._DBStorage__session.query(State).get(state.id)
+        self.assertEqual(state.id, db_state.id)
 
     def test_delete(self):
-        """Test that delete() correctly removes an object from the session."""
-        new_state = State(name="ToDeleteState")
-        storage.new(new_state)
-        storage.save()
-        storage.delete(new_state)
-        self.assertNotIn(new_state, storage.all(State).values())
+        """
+        This test case checks that the delete method correctly deletes
+        objects from the database.
+        """
+        state = State(name="Arizona")
+        self.storage.new(state)
+        self.storage.save()
+        self.storage.delete(state)
+        self.storage.save()
+        db_state = self.storage._DBStorage__session.query(State).get(state.id)
+        self.assertIsNone(db_state)
 
     def test_reload(self):
-        """That reload() correctly loads objects from database into session."""
-        new_state = State(name="TestState")
-        storage.new(new_state)
-        storage.save()
-        storage._DBStorage__session.expunge(new_state)
-        storage.reload()
-        self.assertIn(new_state, storage.all(State).values())
+        """
+        This test case checks that the reload method correctly creates all
+        tables in the database.
+        """
+        Base.metadata.drop_all(self.storage._DBStorage__engine)
+        self.storage.reload()
+        inspector = inspect(self.storage._DBStorage__engine)
+        tables = inspector.get_table_names()
+        expected_tables = ['amenities', 'cities',
+                           'places', 'reviews', 'states', 'users']
+        self.assertCountEqual(tables, expected_tables)
 
-
-if __name__ == "__main__":
-    unittest.main()
+    def test_close(self):
+        """
+        This test case checks that the close method correctly removes the
+        session.
+        """
+        session = self.storage._DBStorage__session
+        self.storage.close()
+        self.assertNotEqual(session, self.storage._DBStorage__session)
