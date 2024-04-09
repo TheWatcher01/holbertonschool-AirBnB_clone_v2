@@ -13,13 +13,16 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import create_engine
 from models.amenity import Amenity
 from models.base_model import Base
-from models.place import Place
 from models.review import Review
 from models.state import State
-from models.city import City
-from os import getenv
-
+from models.place import Place
 from models.user import User
+from models.city import City
+from venv import logger
+from os import getenv
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class DBStorage:
@@ -28,8 +31,8 @@ class DBStorage:
     It encapsulates database engine and session management, providing methods
     to interact with the database.
     """
-    __engine = None
-    __session = None
+    __engine = None  # SQLAlchemy engine instance
+    __session = None  # SQLAlchemy session instance
 
     def __init__(self):
         """
@@ -47,18 +50,32 @@ class DBStorage:
         if getenv('HBNB_ENV') == 'test':
             Base.metadata.drop_all(self.__engine)
 
+    def _query_cls(self, cls):
+        """
+        Helper method to query objects of given class from database.
+        """
+        return {f'{obj.__class__.__name__}.{obj.id}': obj
+                for obj in self.__session.query(cls).all()}
+
     def all(self, cls=None):
         """
-        Queries and returns all objects of a given class from the database.
-        If no class is specified, it returns all objects in the database.
+        Queries and returns all objects of a given class from database.
+        If no class is specified, it returns all objects/cls in database.
         """
+        class_dict = {"State": State, "City": City, "User": User,
+                      "Review": Review, "Amenity": Amenity, "Place": Place}
         if cls:
-            return {f'{obj.__class__.__name__}.{obj.id}': obj
-                    for obj in self.__session.query(cls).all()}
+            # If cls is string, convert it to correspondant class/object
+            if isinstance(cls, str):
+                cls = class_dict.get(cls, None)
+            # Query database for all objects of the class
+            if cls is not None:
+                return self._query_cls(cls)
         else:
+            # If no class specified, return all objects/cls in database
             result = {}
-            for cls in [State, City, User, Review, Amenity, Place]:
-                result.update(self.all(cls))
+            for cls in class_dict.values():
+                result.update(self._query_cls(cls))
             return result
 
     def new(self, obj):
@@ -70,13 +87,15 @@ class DBStorage:
     def save(self):
         """
         Commits all changes of the current database session to the database.
-        Handles exceptions by rolling back the session to the previous state.
+        If error occurs during commit, it rolls back session to previous state,
+        logs the error, and re-raises the exception.
         """
         try:
             self.__session.commit()
         except SQLAlchemyError as e:
             self.__session.rollback()
-            print(f'SQLAlchemy Exception: {e}')
+            logger.error(f'SQLAlchemy Exception during commit: {e}')
+            raise e
 
     def delete(self, obj=None):
         """

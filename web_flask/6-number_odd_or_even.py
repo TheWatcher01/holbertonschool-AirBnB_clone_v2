@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 """
-File: 5-number_odd_or_even.py
+File: 6-number_odd_or_even.py
 Author: TheWatcher01
 Date: 2024-04-08
 Description: This script initiates a Flask web application that listens on
