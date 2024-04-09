@@ -15,7 +15,7 @@ from os import getenv
 
 # Checking the value of the 'HBNB_TYPE_STORAGE' environment variable. If it's
 # 'db', DBStorage engine is used. Otherwise, FileStorage engine is used.
-if getenv('HBNB_TYPE_STORAGE') == 'db':
+if getenv('HBNB_TYPE_STORAGE') == "db":
     # Importing the DBStorage class from the models.engine.db_storage module.
     from models.engine.db_storage import DBStorage
     # Creating an instance of the DBStorage class.
