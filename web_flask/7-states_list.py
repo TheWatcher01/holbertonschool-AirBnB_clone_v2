@@ -23,11 +23,11 @@ def states_list():
     """
     states = storage.all("State").values()
     states = sorted(states, key=lambda state: state.name)
-    return render_template('7-states_list.html', states=states)
+    return render_template('7-states_list.html', sttes=states)
 
 
 @app.teardown_appcontext
-def teardown_db(exception):
+def teardown_db(exception=None):
     """
     This function ensures that the database is closed when the request ends.
     """
