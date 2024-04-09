@@ -21,8 +21,7 @@ def states_list():
     """
     This route generates an HTML page that lists all states in the database.
     """
-    states = storage.all("State").values()
-    states = sorted(states, key=lambda state: state.name)
+    states = storage.all(State)
     return render_template('7-states_list.html', sttes=states)
 
 
