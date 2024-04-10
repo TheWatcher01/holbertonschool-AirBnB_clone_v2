@@ -4,10 +4,10 @@
 File: 8-cities_by_states.py
 Author: TheWatcher01
 Date: 2024-04-10
-Description: This script initiates a Flask web application that listens on 0.0.0.0,
-port 5000. It renders an HTML page that displays all State objects from DBStorage,
-sorted alphabetically (A->Z), along with their associated City objects, also sorted 
-alphabetically (A->Z). The route for this page is /cities_by_states.
+Description: Script initiates Flask web application that listens on 0.0.0.0,
+port 5000. It renders HTML page that displays all State objects from DBStorage,
+sorted alphabetically (A->Z), along with their associated City objects,
+also sorted alphabetically (A->Z). Route for this page is /cities_by_states.
 """
 
 from flask import Flask, render_template
@@ -20,7 +20,7 @@ app = Flask(__name__)
 @app.route('/cities_by_states', strict_slashes=False)
 def cities_by_states():
     """
-    This function fetches all State objects from storage, sorts them alphabetically,
+    Function fetches all State objects from storage, sorts them alphabetically,
     and also sorts each state's cities alphabetically before passing them
     to the template for rendering.
     """
