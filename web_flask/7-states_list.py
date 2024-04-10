@@ -9,6 +9,7 @@ Description: This script initiates a Flask web application that listens on
 """
 
 from flask import Flask, render_template
+from models.state import State
 from models import storage
 
 
@@ -20,7 +21,7 @@ def states_list():
     """
     This route generates an HTML page that lists all states in the database.
     """
-    states = storage.all("State").values()
+    states = storage.all(State)
     return render_template('7-states_list.html', states=states)
 
 
