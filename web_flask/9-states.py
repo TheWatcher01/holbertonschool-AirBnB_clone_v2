@@ -15,7 +15,7 @@ from models.state import State
 from models import storage
 
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates')
 
 
 @app.route('/states', strict_slashes=False)
@@ -39,8 +39,9 @@ def state(id):
     by name, and passes it to the template for rendering.
     """
     state = storage.get(State, id)
-    if state is not None:
-        state.cities = sorted(state.cities, key=lambda city: city.name)
+    if state is None:
+        return render_template('9-states.html'), 404
+    state.cities = sorted(state.cities, key=lambda city: city.name)
     return render_template('9-states.html', state=state)
 
 
