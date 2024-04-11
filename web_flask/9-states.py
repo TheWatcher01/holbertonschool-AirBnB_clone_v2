@@ -42,7 +42,7 @@ def state(id):
         if state.id == id:
             state.cities = sorted(state.cities, key=lambda city: city.name)
             return render_template('9-states.html', state=state)
-    return render_template('9-states.html'), 404
+    return render_template('9-states.html')
 
 
 @app.teardown_appcontext
