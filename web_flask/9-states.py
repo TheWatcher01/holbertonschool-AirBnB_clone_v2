@@ -47,7 +47,7 @@ def state(id):
 
 
 @app.teardown_appcontext
-def close_session(exception):
+def close_session(exception=None):
     """Closes the SQLAlchemy session after each request."""
     storage.close()
 
