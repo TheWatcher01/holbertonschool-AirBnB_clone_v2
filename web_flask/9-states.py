@@ -38,18 +38,17 @@ def state(id):
     Fetches a State object with the given id from storage, sorts its cities
     by name, and passes it to the template for rendering.
     """
-    state = storage.get(State, id)
-    if state is None:
-        return render_template('9-states.html'), 404
-    state.cities = sorted(state.cities, key=lambda city: city.name)
-    return render_template('9-states.html', state=state)
-
+    for state in storage.all(State).values():
+        if state.id == id:
+            state.cities = sorted(state.cities, key=lambda city: city.name)
+            return render_template('9-states.html', state=state)
+    return render_template('9-states.html'), 404
 
 @app.teardown_appcontext
-def close_session(exception=None):
+def close_session(exception):
     """Closes the SQLAlchemy session after each request."""
     storage.close()
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=5000, debug=True)
