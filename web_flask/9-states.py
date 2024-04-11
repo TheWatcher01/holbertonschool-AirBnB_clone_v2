@@ -11,7 +11,6 @@ name (A->Z), under the route /states.
 """
 
 from flask import Flask, render_template
-from flask.cli import F
 from models.state import State
 from models import storage
 
