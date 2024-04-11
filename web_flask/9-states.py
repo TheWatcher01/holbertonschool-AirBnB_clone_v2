@@ -11,6 +11,7 @@ name (A->Z), under the route /states.
 """
 
 from flask import Flask, render_template
+from flask.cli import F
 from models.state import State
 from models import storage
 
@@ -52,4 +53,4 @@ def close_session(exception):
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=5000, debug=False)
