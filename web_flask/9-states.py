@@ -44,6 +44,7 @@ def state(id):
             return render_template('9-states.html', state=state)
     return render_template('9-states.html'), 404
 
+
 @app.teardown_appcontext
 def close_session(exception):
     """Closes the SQLAlchemy session after each request."""
@@ -51,4 +52,4 @@ def close_session(exception):
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000)
